@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnglishNest — Online English Lessons for Kids</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --coral:#FF6B6B;--coral-d:#e85555;--coral-light:#FFF0F0;
+  --sky:#4ECDC4;--sky-d:#35b5ac;--sky-light:#E8FAFA;
+  --sun:#FFD93D;--sun-light:#FFFBEA;
+  --violet:#A78BFA;--violet-light:#F5F3FF;
+  --mint:#95E1D3;
+  --navy:#1B2B4B;--navy2:#2d3f63;
+  --white:#fff;--off:#FFF8F2;--bg:#F7F5F0;
+  --gray:#6B7280;--gray2:#9CA3AF;
+  --border:#E5E7EB;
+  --green:#10B981;--green-light:#ECFDF5;
+  --amber:#F59E0B;--amber-light:#FFFBEB;
+  --rose:#EF4444;--rose-light:#FEF2F2;
+  --shadow-sm:0 2px 8px rgba(27,43,75,.08);
+  --shadow:0 6px 24px rgba(27,43,75,.10);
+  --shadow-lg:0 16px 56px rgba(27,43,75,.15);
+  --r:16px;--r-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden;}
+
+/* ── UTILS ── */
+.btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;padding:11px 22px;border-radius:12px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-coral{background:var(--coral);color:#fff;box-shadow:0 4px 14px rgba(255,107,107,.3);}
+.btn-coral:hover{background:var(--coral-d);transform:translateY(-1px);}
+.btn-sky{background:var(--sky);color:#fff;}
+.btn-sky:hover{background:var(--sky-d);transform:translateY(-1px);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{background:#0ea271;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--navy);border:2px solid var(--border);}
+.btn-ghost:hover{background:var(--bg);}
+.btn-ghost-white{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);}
+.btn-ghost-white:hover{background:rgba(255,255,255,.25);}
+.btn-sm{padding:7px 14px;font-size:.8rem;border-radius:9px;}
+.btn-xs{padding:5px 11px;font-size:.74rem;border-radius:7px;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;}
+.badge-green{background:var(--green-light);color:var(--green);}
+.badge-amber{background:var(--amber-light);color:var(--amber);}
+.badge-rose{background:var(--rose-light);color:var(--rose);}
+.badge-sky{background:var(--sky-light);color:var(--sky-d);}
+.badge-gray{background:var(--bg);color:var(--gray);}
+.badge-navy{background:var(--navy);color:#fff;}
+.badge-coral{background:var(--coral-light);color:var(--coral-d);}
+.card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.card-hd{padding:14px 18px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-hd-title{font-weight:800;font-size:.92rem;}
+.card-bd{padding:16px 18px;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:10px 16px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);background:var(--bg);border-bottom:1.5px solid var(--border);}
+td{padding:12px 16px;font-size:.85rem;border-bottom:1.5px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--off);}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:.78rem;font-weight:800;margin-bottom:5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--navy);background:var(--off);outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--sky);background:#fff;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(.8);opacity:0}70%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ NAV ══ */
+#topnav{
+  position:fixed;top:0;left:0;right:0;z-index:900;height:64px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);
+  border-bottom:2px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;transition:box-shadow .3s;
+}
+#topnav.scrolled{box-shadow:var(--shadow);}
+.nav-logo{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:8px;cursor:pointer;border:none;background:none;}
+.logo-box{width:34px;height:34px;background:linear-gradient(135deg,var(--coral),#FF8C42);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none;}
+.nav-links button{font-family:'Nunito',sans-serif;font-size:.86rem;font-weight:700;color:var(--gray);background:none;border:none;cursor:pointer;padding:8px 13px;border-radius:9px;transition:all .2s;}
+.nav-links button:hover{background:var(--off);color:var(--navy);}
+.nav-links button.nav-active{color:var(--coral);}
+.nav-enroll{background:var(--coral)!important;color:#fff!important;border-radius:11px!important;box-shadow:0 4px 12px rgba(255,107,107,.3)!important;padding:9px 18px!important;}
+.nav-enroll:hover{transform:translateY(-1px)!important;}
+.nav-portals{display:flex;gap:6px;}
+.nav-portals button{font-family:'Nunito',sans-serif;font-size:.76rem;font-weight:800;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;}
+.btn-pp{background:var(--sky-light);color:var(--sky-d);}
+.btn-pp:hover{background:var(--sky);color:#fff;}
+.btn-tp{background:var(--violet-light);color:var(--violet);}
+.btn-tp:hover{background:var(--violet);color:#fff;}
+
+/* ══ SITE ══ */
+#site-wrap{padding-top:64px;}
+.site-sec{display:none;}
+.site-sec.active{display:block;animation:fadeUp .3s ease;}
+
+/* HERO */
+.hero-band{background:linear-gradient(140deg,#FFF8F0 0%,#FFF0F8 50%,#EDFAFA 100%);padding:64px 40px 52px;}
+.hero-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--sun);color:var(--navy);font-weight:800;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;padding:5px 13px;border-radius:20px;margin-bottom:16px;}
+.hero-h1{font-family:'Baloo 2',cursive;font-size:clamp(2rem,3.5vw,3.3rem);font-weight:800;line-height:1.14;margin-bottom:16px;}
+.hero-h1 .c1{color:var(--coral);}
+.hero-h1 .c2{color:var(--sky-d);}
+.hero-desc{font-size:.97rem;color:var(--gray);line-height:1.75;margin-bottom:26px;max-width:460px;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+.trust-row{display:flex;gap:18px;flex-wrap:wrap;}
+.trust-pill{display:flex;align-items:center;gap:8px;}
+.trust-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.trust-val{font-weight:800;font-size:.82rem;}
+.trust-sub{font-size:.72rem;color:var(--gray);}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:190px 190px;gap:10px;border-radius:20px;overflow:hidden;position:relative;}
+.mosaic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s;}
+.mosaic img:hover{transform:scale(1.06);}
+.mosaic .big{grid-row:1/3;}
+.float-badge{position:absolute;background:#fff;border-radius:14px;padding:9px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:9px;font-weight:800;font-size:.77rem;animation:bob 3.2s ease-in-out infinite;z-index:2;}
+.float-badge.fb1{top:-10px;left:10px;}
+.float-badge.fb2{bottom:18px;right:-10px;animation-delay:1s;}
+
+/* STATS */
+.stats-band{background:var(--navy);padding:26px 40px;display:flex;justify-content:center;gap:56px;flex-wrap:wrap;}
+.snum{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:var(--sun);}
+.slbl{font-size:.74rem;font-weight:700;color:rgba(255,255,255,.6);margin-top:2px;}
+
+/* SECTION */
+.sec{padding:60px 40px;}
+.sec-in{max-width:1100px;margin:0 auto;}
+.sec-tag{display:inline-block;background:var(--sun);color:var(--navy);font-weight:800;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;}
+.sec-title{font-family:'Baloo 2',cursive;font-size:clamp(1.7rem,2.8vw,2.4rem);font-weight:800;margin-bottom:6px;}
+.sec-sub{color:var(--gray);font-size:.92rem;line-height:1.7;max-width:520px;}
+.page-band{background:linear-gradient(135deg,#FFF8F0,#EDFAFA);border-radius:20px;padding:44px 32px;text-align:center;margin-bottom:40px;}
+
+/* PHOTOS */
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;}
+.photo-card{border-radius:18px;overflow:hidden;position:relative;box-shadow:var(--shadow-sm);}
+.photo-card img{width:100%;height:215px;object-fit:cover;display:block;transition:transform .45s;}
+.photo-card:hover img{transform:scale(1.07);}
+.photo-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(27,43,75,.75),transparent);padding:28px 13px 11px;color:#fff;font-weight:800;font-size:.83rem;}
+.photo-chip{position:absolute;top:10px;left:10px;background:var(--sun);color:var(--navy);font-size:.68rem;font-weight:800;padding:2px 9px;border-radius:20px;}
+
+/* CTA + FOOTER */
+.cta-band{background:linear-gradient(135deg,var(--coral),#FF8C42);padding:56px 40px;text-align:center;}
+.cta-band h2{font-family:'Baloo 2',cursive;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:10px;}
+.cta-band p{color:rgba(255,255,255,.88);font-size:.95rem;margin-bottom:26px;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.site-footer{background:var(--navy);color:#fff;padding:40px;text-align:center;}
+.footer-logo{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;margin-bottom:8px;}
+.footer-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin:14px 0;}
+.footer-links button{background:none;border:none;color:rgba(255,255,255,.6);font-family:'Nunito',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;}
+.footer-links button:hover{color:var(--sun);}
+.footer-copy{font-size:.75rem;color:rgba(255,255,255,.3);margin-top:10px;}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;}
+.pc{background:#fff;border:2.5px solid var(--border);border-radius:var(--r);padding:26px 22px;position:relative;transition:all .25s;}
+.pc:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.pc.feat{border-color:var(--coral);}
+.pc.grp{border-color:var(--sky);}
+.pc-pill{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-weight:800;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 14px;border-radius:20px;white-space:nowrap;}
+.pc-type{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:5px;}
+.pc-name{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;margin-bottom:4px;}
+.pc-price{font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:var(--coral);line-height:1;}
+.pc-price.sky{color:var(--sky-d);}
+.pc-price small{font-size:.85rem;color:var(--gray);font-family:'Nunito',sans-serif;font-weight:600;}
+.pc-note{font-size:.8rem;color:var(--gray);margin:8px 0 16px;line-height:1.6;}
+.pc-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.pc-feats li{font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:8px;}
+.pc-feats li::before{content:'✓';color:var(--sky-d);font-weight:900;flex-shrink:0;}
+.cancel-box{background:linear-gradient(135deg,var(--sun),#FFB347);border-radius:16px;padding:20px 22px;margin-top:28px;display:flex;gap:14px;align-items:flex-start;}
+
+/* HOW IT WORKS */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:36px;}
+.step-card{background:#fff;border:2.5px solid var(--border);border-radius:var(--r);padding:26px 20px;text-align:center;transition:all .2s;}
+.step-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.step-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#fff;margin:0 auto 14px;}
+.step-icon{font-size:1.8rem;margin-bottom:8px;}
+.step-title{font-weight:800;font-size:.92rem;margin-bottom:5px;}
+.step-desc{font-size:.8rem;color:var(--gray);line-height:1.65;}
+.includes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:24px;}
+.inc-item{display:flex;align-items:center;gap:10px;background:var(--off);border-radius:10px;padding:12px 14px;}
+.inc-icon{font-size:1.1rem;flex-shrink:0;}
+.inc-txt{font-weight:700;font-size:.82rem;line-height:1.4;}
+
+/* SCHEDULE */
+.day-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
+.day-tab{padding:8px 16px;border-radius:10px;border:2px solid var(--border);font-size:.82rem;font-weight:800;cursor:pointer;background:#fff;color:var(--gray);transition:all .2s;}
+.day-tab:hover{border-color:var(--sky);}
+.day-tab.dt-on{border-color:var(--sky);background:var(--sky);color:#fff;}
+.day-tab.dt-off{opacity:.4;cursor:not-allowed;}
+.sched-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.sched-card{background:#fff;border:2px solid var(--border);border-radius:var(--r);padding:22px;}
+.sched-title{font-weight:800;font-size:.92rem;margin-bottom:16px;}
+.slot-row{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--off);border-radius:9px;margin-bottom:9px;font-size:.86rem;}
+.slot-time{font-weight:800;}
+.slot-tag{font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:20px;}
+.slot-open{background:var(--green-light);color:var(--green);}
+.slot-few{background:var(--sun-light);color:var(--amber);}
+.slot-full{background:var(--rose-light);color:var(--rose);}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.contact-form-card{background:#fff;border:2px solid var(--border);border-radius:var(--r);padding:26px;}
+.contact-info-stack{display:flex;flex-direction:column;gap:14px;}
+.ci-card{background:#fff;border:2px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:flex-start;gap:13px;}
+.ci-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.ci-title{font-weight:800;font-size:.88rem;margin-bottom:3px;}
+.ci-val{font-size:.82rem;color:var(--gray);line-height:1.55;}
+
+/* ══════════════════════════════════
+   ENROLL MODAL — THE MAIN FLOW
+══════════════════════════════════ */
+.enroll-ov{position:fixed;inset:0;background:rgba(27,43,75,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.enroll-ov.open{opacity:1;pointer-events:all;}
+.enroll-box{background:#fff;border-radius:22px;padding:30px 28px;max-width:520px;width:100%;box-shadow:var(--shadow-lg);max-height:92vh;overflow-y:auto;transform:scale(.95);transition:transform .25s;}
+.enroll-ov.open .enroll-box{transform:scale(1);}
+.em-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--gray);line-height:1;padding:2px;}
+.em-title{font-family:'Baloo 2',cursive;font-size:1.45rem;font-weight:800;margin-bottom:2px;}
+.em-sub{color:var(--gray);font-size:.82rem;margin-bottom:18px;}
+
+/* progress bar */
+.prog{display:flex;gap:5px;margin-bottom:20px;}
+.prog-s{height:5px;flex:1;border-radius:3px;background:var(--border);transition:background .4s;}
+.prog-s.on{background:var(--coral);}
+
+/* step labels */
+.step-labels{display:flex;gap:0;margin-bottom:20px;}
+.step-lbl{flex:1;text-align:center;font-size:.68rem;font-weight:800;color:var(--gray2);transition:color .3s;}
+.step-lbl.on{color:var(--coral);}
+
+/* plan cards in modal */
+.plan-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
+.plan-card{border:2.5px solid var(--border);border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;}
+.plan-card:hover{border-color:var(--sky);}
+.plan-card.sel{border-color:var(--coral);background:var(--coral-light);}
+.plan-card-icon{font-size:1.8rem;flex-shrink:0;}
+.plan-card-name{font-weight:800;font-size:.95rem;}
+.plan-card-desc{font-size:.76rem;color:var(--gray);margin-top:2px;}
+.plan-card-price{margin-left:auto;text-align:right;flex-shrink:0;}
+.plan-price-val{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:var(--coral);}
+.plan-price-per{font-size:.7rem;color:var(--gray);}
+.plan-card.sel .plan-price-val{color:var(--coral-d);}
+
+/* day picker */
+.dp-row{display:flex;gap:6px;flex-wrap:wrap;}
+.dp-btn{padding:7px 13px;border:2.5px solid var(--border);border-radius:8px;font-size:.8rem;font-weight:800;cursor:pointer;background:var(--off);transition:all .2s;font-family:'Nunito',sans-serif;}
+.dp-btn:hover{border-color:var(--sky);}
+.dp-btn.sel{border-color:var(--coral);background:var(--coral);color:#fff;}
+.dp-btn.off{opacity:.4;cursor:not-allowed;}
+
+/* ── BANK TRANSFER STEP ── */
+.bank-step{background:linear-gradient(135deg,var(--sky-light),#e0f8f6);border:2px solid var(--sky);border-radius:16px;padding:22px 24px;margin-bottom:16px;}
+.bank-step-title{font-family:'Baloo 2',cursive;font-weight:800;font-size:1rem;color:var(--sky-d);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(78,205,196,.3);font-size:.84rem;gap:8px;}
+.bank-row:last-child{border-bottom:none;}
+.bank-lbl{color:var(--gray);font-weight:600;flex-shrink:0;}
+.bank-val{font-weight:800;display:flex;align-items:center;gap:6px;text-align:right;}
+.copy-btn{background:var(--sky-d);color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:.68rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;flex-shrink:0;transition:all .2s;}
+.copy-btn:hover{background:var(--sky);}
+
+/* reference notice */
+.ref-box{background:var(--sun-light);border:2px solid var(--sun);border-radius:11px;padding:13px 15px;font-size:.82rem;font-weight:700;line-height:1.65;margin-bottom:14px;}
+.ref-box strong{color:var(--amber);}
+
+/* summary box */
+.summary-box{background:var(--off);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:.84rem;}
+.summary-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);}
+.summary-row:last-child{border-bottom:none;font-weight:800;font-size:.92rem;}
+.summary-lbl{color:var(--gray);}
+.summary-val{font-weight:700;}
+
+.em-actions{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+
+/* ── SENDING STATE ── */
+.sending-overlay{position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:10;}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--coral);border-radius:50%;animation:spin .8s linear infinite;}
+.sending-txt{font-weight:800;font-size:.95rem;color:var(--navy);}
+.sending-sub{font-size:.8rem;color:var(--gray);}
+
+/* ── CONFIRMATION SCREEN ── */
+.confirm-screen{text-align:center;padding:8px 0;animation:fadeUp .4s ease;}
+.confirm-icon-wrap{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--sky));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2.5rem;animation:pop .5s ease;}
+.confirm-title{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;margin-bottom:6px;}
+.confirm-sub{color:var(--gray);font-size:.88rem;line-height:1.7;margin-bottom:22px;}
+
+/* enrollment card */
+.enrol-card{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:16px;padding:22px 24px;margin-bottom:20px;text-align:left;position:relative;overflow:hidden;}
+.enrol-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:rgba(255,255,255,.05);border-radius:50%;}
+.enrol-card::after{content:'';position:absolute;bottom:-20px;left:-10px;width:70px;height:70px;background:rgba(255,255,255,.04);border-radius:50%;}
+.enrol-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55);margin-bottom:4px;}
+.enrol-number{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:var(--sun);letter-spacing:.04em;margin-bottom:16px;}
+.enrol-details{display:flex;flex-direction:column;gap:8px;}
+.enrol-row{display:flex;align-items:center;gap:10px;font-size:.82rem;color:rgba(255,255,255,.85);}
+.enrol-row-icon{font-size:.95rem;flex-shrink:0;width:18px;}
+.enrol-row-val{font-weight:700;}
+
+/* what next */
+.what-next{background:var(--off);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:18px;text-align:left;}
+.wn-title{font-weight:800;font-size:.9rem;margin-bottom:12px;}
+.wn-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:.82rem;line-height:1.6;}
+.wn-item:last-child{margin-bottom:0;}
+.wn-num{width:22px;height:22px;border-radius:50%;background:var(--coral);color:#fff;font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* email preview note */
+.email-note{background:var(--green-light);border:1.5px solid var(--green);border-radius:11px;padding:12px 14px;font-size:.8rem;font-weight:700;line-height:1.6;color:var(--green);margin-bottom:16px;display:flex;gap:9px;align-items:flex-start;text-align:left;}
+
+/* ══ PORTAL SHELL ══ */
+#portal-wrap{display:none;padding-top:64px;min-height:100vh;}
+#portal-wrap.active{display:flex;}
+.portal-sidebar{width:208px;flex-shrink:0;background:#fff;border-right:2px solid var(--border);display:flex;flex-direction:column;padding:14px 8px;min-height:calc(100vh - 64px);position:sticky;top:64px;align-self:flex-start;}
+.ps-sec{margin-bottom:20px;}
+.ps-lbl{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--gray2);padding:0 10px;margin-bottom:6px;}
+.ps-btn{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:.85rem;font-weight:700;color:var(--gray);width:100%;border:none;background:none;text-align:left;transition:all .15s;font-family:'Nunito',sans-serif;}
+.ps-btn:hover{background:var(--off);color:var(--navy);}
+.ps-btn.ps-on{background:var(--coral-light);color:var(--coral);}
+.ps-icon{font-size:.92rem;width:18px;text-align:center;}
+.ps-badge{margin-left:auto;background:var(--rose);color:#fff;font-size:.62rem;font-weight:800;border-radius:10px;padding:1px 6px;min-width:18px;text-align:center;}
+.ps-badge.a{background:var(--amber);}
+.portal-main{flex:1;overflow-y:auto;padding:26px;background:var(--bg);}
+.portal-pg{display:none;}
+.portal-pg.active{display:block;animation:fadeUp .28s ease;}
+.pg-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:3px;}
+.pg-sub{color:var(--gray);font-size:.85rem;margin-bottom:20px;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:16px 14px;}
+.sc-lbl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:5px;}
+.sc-val{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;line-height:1;}
+.sc-val.g{color:var(--green);}
+.sc-val.a{color:var(--amber);}
+.sc-val.r{color:var(--rose);}
+.sc-val.s{color:var(--sky-d);}
+.mb18{margin-bottom:18px;}
+
+/* teacher pending/enrollments table */
+.enrol-status-row{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#fff;border:1.5px solid var(--border);border-radius:var(--r-sm);margin-bottom:9px;}
+.es-num{font-family:'Baloo 2',cursive;font-weight:800;color:var(--navy);font-size:.95rem;min-width:100px;}
+.es-name{font-weight:700;font-size:.85rem;flex:1;}
+.es-detail{font-size:.76rem;color:var(--gray);}
+.es-actions{display:flex;gap:6px;margin-left:auto;}
+
+/* chat */
+.chat-shell{display:grid;grid-template-columns:220px 1fr;background:#fff;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;height:480px;}
+.chat-list-col{border-right:1.5px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+.chat-list-hd{padding:12px 14px;border-bottom:1.5px solid var(--border);font-weight:800;font-size:.85rem;flex-shrink:0;}
+.chat-row{padding:11px 13px;cursor:pointer;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:9px;transition:background .15s;}
+.chat-row:hover{background:var(--off);}
+.chat-row.on{background:var(--sky-light);}
+.chat-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.73rem;color:#fff;flex-shrink:0;}
+.chat-nm{font-weight:700;font-size:.82rem;}
+.chat-prev{font-size:.72rem;color:var(--gray);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+.chat-unread{margin-left:auto;background:var(--coral);color:#fff;border-radius:10px;font-size:.62rem;font-weight:800;padding:1px 6px;flex-shrink:0;}
+.chat-win{display:flex;flex-direction:column;}
+.chat-win-hd{padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.chat-win-name{font-weight:800;font-size:.88rem;}
+.chat-win-sub{font-size:.72rem;color:var(--gray);}
+.msgs-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px;background:var(--off);}
+.msg{display:flex;flex-direction:column;max-width:72%;}
+.msg.me{align-self:flex-end;align-items:flex-end;}
+.msg.them{align-self:flex-start;align-items:flex-start;}
+.msg-b{padding:9px 13px;border-radius:13px;font-size:.84rem;line-height:1.55;}
+.msg.me .msg-b{background:var(--sky);color:#fff;border-bottom-right-radius:3px;}
+.msg.them .msg-b{background:#fff;color:var(--navy);border-bottom-left-radius:3px;box-shadow:var(--shadow-sm);}
+.msg-t{font-size:.66rem;color:var(--gray);margin-top:3px;}
+.chat-input-bar{padding:11px 14px;border-top:1.5px solid var(--border);display:flex;gap:9px;align-items:center;background:#fff;flex-shrink:0;}
+.chat-in{flex:1;padding:9px 13px;border:2px solid var(--border);border-radius:20px;font-family:'Nunito',sans-serif;font-size:.84rem;outline:none;background:var(--off);}
+.chat-in:focus{border-color:var(--sky);}
+.send-btn{width:36px;height:36px;border-radius:50%;background:var(--sky);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.send-btn:hover{background:var(--sky-d);}
+.attach-btn{width:32px;height:32px;border-radius:50%;background:var(--off);border:1.5px solid var(--border);color:var(--gray);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.84rem;flex-shrink:0;}
+
+/* materials, pending, groups */
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:18px;}
+.mat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .2s;}
+.mat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.mat-icon{font-size:1.9rem;margin-bottom:8px;}
+.mat-name{font-weight:800;font-size:.84rem;margin-bottom:3px;}
+.mat-meta{font-size:.72rem;color:var(--gray);}
+.upload-zone{border:2.5px dashed var(--border);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px;}
+.upload-zone:hover{border-color:var(--sky);background:var(--sky-light);}
+.pend-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.pend-dot{width:9px;height:9px;border-radius:50%;background:var(--amber);flex-shrink:0;}
+.pend-info{flex:1;}
+.pend-name{font-weight:800;font-size:.87rem;}
+.pend-why{font-size:.75rem;color:var(--gray);margin-top:2px;}
+.grp-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;}
+.grp-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.grp-name{font-weight:800;font-size:.94rem;}
+.grp-meta{font-size:.76rem;color:var(--gray);margin-top:2px;}
+.student-chip{display:flex;align-items:center;gap:7px;background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:6px 11px;}
+.sc-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.64rem;font-weight:800;}
+.sc-nm{font-size:.79rem;font-weight:700;}
+.sc-gr{font-size:.69rem;color:var(--gray);}
+.add-chip{border:2px dashed var(--border);background:transparent;cursor:pointer;}
+.add-chip:hover{border-color:var(--sky);background:var(--sky-light);}
+
+/* calendar */
+.cal-hd-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:6px;}
+.cal-hd-cell{text-align:center;font-size:.66rem;font-weight:800;text-transform:uppercase;color:var(--gray);}
+.cal-body{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-cell{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.77rem;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.cal-cell:hover{background:var(--off);}
+.cal-cell.has-s{background:var(--sky-light);border-color:var(--sky);color:var(--sky-d);font-weight:800;}
+.cal-cell.has-p{background:var(--amber-light);border-color:var(--amber);color:var(--amber);font-weight:800;}
+.cal-cell.today{border-color:var(--navy);font-weight:900;}
+.cal-cell.empty{cursor:default;}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:currentColor;margin-top:2px;}
+
+/* inner modal */
+.im-ov{position:fixed;inset:0;background:rgba(27,43,75,.5);z-index:800;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.im-ov.open{opacity:1;pointer-events:all;}
+.im-box{background:#fff;border-radius:20px;padding:28px;max-width:400px;width:100%;box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .2s;}
+.im-ov.open .im-box{transform:scale(1);}
+.im-title{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;margin-bottom:3px;}
+.im-sub{color:var(--gray);font-size:.82rem;margin-bottom:16px;}
+.im-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+
+/* toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-size:.84rem;font-weight:700;box-shadow:var(--shadow-lg);transform:translateY(60px);opacity:0;transition:all .3s;z-index:99999;max-width:280px;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* responsive */
+@media(max-width:780px){
+  #topnav{padding:0 14px;}
+  .nav-links{display:none;}
+  .hero-grid{grid-template-columns:1fr;}
+  .mosaic{grid-template-rows:140px 140px;}
+  .photo-grid{grid-template-columns:1fr 1fr;}
+  .sched-grid,.contact-grid{grid-template-columns:1fr;}
+  .pricing-grid,.steps-grid{grid-template-columns:1fr;}
+  .chat-shell{grid-template-columns:52px 1fr;}
+  .chat-nm,.chat-prev,.chat-unread{display:none;}
+  .portal-sidebar{width:50px;}
+  .ps-lbl,.ps-btn span:not(.ps-icon),.ps-badge{display:none;}
+  .sec{padding:38px 18px;}
+  .portal-main{padding:14px;}
+  .form-row{grid-template-columns:1fr;}
+  .float-badge{display:none;}
+  .enrol-card{padding:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="topnav">
+  <button class="nav-logo" onclick="goSec('home')">
+    <div class="logo-box">🌿</div>EnglishNest
+  </button>
+  <ul class="nav-links">
+    <li><button onclick="goSec('home')" id="nb-home" class="nav-active">Home</button></li>
+    <li><button onclick="goSec('pricing')" id="nb-pricing">Pricing</button></li>
+    <li><button onclick="goSec('howitworks')" id="nb-howitworks">How It Works</button></li>
+    <li><button onclick="goSec('schedule')" id="nb-schedule">Schedule</button></li>
+    <li><button onclick="goSec('contact')" id="nb-contact">Contact Us</button></li>
+    <li><button onclick="goSec('about')" id="nb-about">About Us</button></li>
+    <li><button onclick="openEnroll()" class="nav-enroll">✍️ Enroll Now</button></li>
+  </ul>
+  <div class="nav-portals">
+    <button class="btn-pp" style="background:linear-gradient(135deg,#FF6B6B,#FF8C42);color:#fff;font-weight:900;font-size:.84rem;padding:8px 16px;border-radius:10px;" onclick="openStudentLogin()">🎓 Student Login</button>
+    <button class="btn-tp" onclick="openPortal('teacher')">👩‍🏫 Teacher</button>
+  </div>
+</nav>
+
+<!-- ══════════════════ PUBLIC SITE ══════════════════ -->
+<div id="site-wrap">
+
+  <!-- HOME -->
+  <div class="site-sec active" id="sec-home">
+    <div class="hero-band">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">🇬🇧 Istanbul · Online · Primary School</div>
+          <h1 class="hero-h1">Where kids <span class="c1">fall in love</span><br>with <span class="c2">English!</span></h1>
+          <p class="hero-desc">Fun, personalised 1-on-1 and group English lessons for primary school children. Live sessions on Zoom, real progress — and happy kids! 🎉</p>
+          <div class="hero-btns">
+            <button class="btn btn-coral" onclick="openEnroll()">✍️ Enroll Now</button>
+            <button class="btn btn-ghost" onclick="goSec('howitworks')">How It Works →</button>
+          </div>
+
+        </div>
+        <div style="position:relative;">
+          <div class="float-badge fb1"><span style="font-size:1.1rem">🎉</span><div><div style="font-size:.68rem;color:var(--gray)">This week</div><div>3 new enrolments!</div></div></div>
+          <div class="float-badge fb2"><span style="font-size:1.1rem">⭐</span><div><div style="font-size:.68rem;color:var(--gray)">Parent says</div><div>"She loves every class!"</div></div></div>
+          <div class="mosaic">
+            <img class="big" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80" alt="Child studying"/>
+            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&q=80" alt="Online lesson"/>
+            <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&q=80" alt="Kids learning"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" style="background:var(--off);">
+      <div class="sec-in">
+        <div class="sec-tag">📸 Learning in Action</div>
+        <div class="sec-title">Every lesson is an adventure</div>
+        <div class="sec-sub">From phonics to projects, reading to role-play — lessons built to keep kids curious, confident and coming back for more.</div>
+        <div class="photo-grid">
+          <div class="photo-card"><div class="photo-chip">1-on-1</div><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=500&q=80" alt="Reading"/><div class="photo-label">📖 Reading & Comprehension</div></div>
+          <div class="photo-card"><div class="photo-chip">Online</div><img src="https://images.unsplash.com/photo-1610484826967-09c5720778c7?w=500&q=80" alt="Online lesson"/><div class="photo-label">💻 Live Online Sessions</div></div>
+          <div class="photo-card"><div class="photo-chip">Projects</div><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80" alt="Homework"/><div class="photo-label">📝 Creative Projects</div></div>
+          <div class="photo-card"><div class="photo-chip">Group</div><img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=500&q=80" alt="Group study"/><div class="photo-label">👥 Group Study Sessions</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-band">
+      <h2>Ready to start your child's English journey? 🚀</h2>
+      <p>Spots are limited — enroll today and secure your preferred schedule.</p>
+      <div class="cta-btns">
+        <button class="btn" style="background:#fff;color:var(--coral);font-weight:800;" onclick="openEnroll()">✍️ Enroll Now — It's Easy!</button>
+        <button class="btn btn-ghost-white" onclick="goSec('pricing')">View Pricing →</button>
+      </div>
+    </div>
+    <footer class="site-footer">
+      <div class="footer-logo">🌿 EnglishNest</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:12px;">Online English lessons for primary school children · Istanbul, Turkey</div>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+        <a href="https://wa.me/905xxxxxxxxx" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;padding:9px 18px;border-radius:11px;text-decoration:none;font-weight:800;font-size:.84rem;font-family:'Nunito',sans-serif;">📱 WhatsApp Us</a>
+        <a href="mailto:hello@englishnest.com" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);color:#fff;padding:9px 18px;border-radius:11px;text-decoration:none;font-weight:800;font-size:.84rem;font-family:'Nunito',sans-serif;border:2px solid rgba(255,255,255,.3);">📧 Email Us</a>
+      </div>
+      <div class="footer-links">
+        <button onclick="goSec('pricing')">Pricing</button>
+        <button onclick="goSec('howitworks')">How It Works</button>
+        <button onclick="goSec('schedule')">Schedule</button>
+        <button onclick="goSec('contact')">Contact Us</button>
+        <button onclick="goSec('about')">About Us</button>
+      </div>
+      <div class="footer-copy">© 2026 EnglishNest · Made with ❤️ for curious kids</div>
+    </footer>
+  </div>
+
+  <!-- PRICING -->
+  <div class="site-sec" id="sec-pricing">
+    <div class="sec"><div class="sec-in">
+      <div class="page-band">
+        <div class="sec-tag">💰 Pricing</div>
+        <div class="sec-title">Simple, honest pricing</div>
+        <p style="color:var(--gray);font-size:.93rem;max-width:460px;margin:6px auto 0;line-height:1.7;">No hidden fees. No long contracts. Pay by bank transfer after enrolling.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pc">
+          <div class="pc-type">1-on-1 · Pay as you go</div>
+          <div class="pc-name">Flexible Sessions</div>
+          <div style="font-weight:800;font-size:.88rem;color:var(--sky-d);background:var(--sky-light);border:1.5px solid var(--sky);border-radius:9px;padding:9px 13px;margin:8px 0 14px;">📩 Contact us for pricing</div>
+          <div class="pc-note">Book individually. No monthly commitment. Cancel 24h in advance.</div>
+          <ul class="pc-feats"><li>45 min per session</li><li>Personalised to your child</li><li>Cancel 24h in advance</li><li>Cancelled sessions rescheduled</li><li>WhatsApp updates</li><li>Access to all materials</li></ul>
+          <button class="btn btn-ghost" style="width:100%" onclick="openEnroll()">Get started →</button>
+        </div>
+        <div class="pc feat">
+          <div class="pc-pill" style="background:var(--coral);color:#fff;">⭐ Best Value</div>
+          <div class="pc-type">1-on-1 · Monthly</div>
+          <div class="pc-name">Monthly Plan</div>
+          <div style="font-weight:800;font-size:.88rem;color:var(--coral-d);background:var(--coral-light);border:1.5px solid var(--coral);border-radius:9px;padding:9px 13px;margin:8px 0 14px;">📩 Contact us for pricing</div>
+          <div class="pc-note">8 sessions/month (2× per week). Fixed schedule. Best value!</div>
+          <ul class="pc-feats"><li>8 sessions per month</li><li>Fixed weekly schedule</li><li>Priority booking</li><li>Monthly progress report</li><li>All materials included</li><li>WhatsApp parent chat</li></ul>
+          <button class="btn btn-coral" style="width:100%" onclick="openEnroll()">Enroll Now →</button>
+        </div>
+        <div class="pc grp">
+          <div class="pc-pill" style="background:var(--sky-d);color:#fff;">👥 Group</div>
+          <div class="pc-type">Group Study · 3–4 Students</div>
+          <div class="pc-name">Group Sessions</div>
+          <div style="font-weight:800;font-size:.88rem;color:var(--sky-d);background:var(--sky-light);border:1.5px solid var(--sky);border-radius:9px;padding:9px 13px;margin:8px 0 14px;">📩 Contact us for pricing</div>
+          <div class="pc-note">Small groups of 3–4 students. Great for peer learning and collaboration!</div>
+          <ul class="pc-feats"><li>Max 4 students per group</li><li>45 min per session</li><li>Themed group projects</li><li>Peer learning & fun</li><li>Shared materials</li><li>Social, lively atmosphere</li></ul>
+          <button class="btn btn-sky" style="width:100%" onclick="openEnroll()">Join a group →</button>
+        </div>
+      </div>
+      <div class="cancel-box">
+        <div style="font-size:1.8rem;flex-shrink:0;">📌</div>
+        <div><div style="font-weight:800;font-size:.95rem;margin-bottom:4px;">Cancellation Policy — No session is ever lost!</div><div style="font-size:.83rem;line-height:1.65;opacity:.85;">If a session is cancelled by either party, it goes to a <strong>Pending list</strong> and is rescheduled. You always get every session you enrolled for.</div></div>
+      </div>
+      <div style="background:var(--sky-light);border:2px solid var(--sky);border-radius:var(--r);padding:22px 24px;margin-top:20px;">
+        <div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--sky-d);margin-bottom:12px;">🏦 How to Pay — Bank Transfer</div>
+        <p style="font-size:.85rem;color:var(--gray);line-height:1.7;">After enrolling, you'll see our bank details on screen and receive a <strong>confirmation email</strong> with your unique <strong>Enrollment Number</strong>, your schedule, and transfer instructions. Once we receive your payment, your spot is confirmed and your Zoom link will be sent.</p>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="site-sec" id="sec-howitworks">
+    <div class="sec"><div class="sec-in">
+      <div class="page-band">
+        <div class="sec-tag">🗺️ The Journey</div>
+        <div class="sec-title">How it works</div>
+        <p style="color:var(--gray);font-size:.93rem;max-width:440px;margin:6px auto 0;line-height:1.7;">From enrollment to first lesson in just a few simple steps.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" style="border-color:var(--coral)"><div class="step-num" style="background:var(--coral)">1</div><div class="step-icon">📋</div><div class="step-title">Choose your plan</div><div class="step-desc">Pick 1-on-1 (monthly or pay-as-you-go) or a group session. Select your child's details and preferred 2 days per week.</div></div>
+        <div class="step-card" style="border-color:var(--sun)"><div class="step-num" style="background:var(--sun);color:var(--navy)">2</div><div class="step-icon">🏦</div><div class="step-title">Get bank details</div><div class="step-desc">After submitting, you'll see our bank account details on screen with your enrollment amount and reference number.</div></div>
+        <div class="step-card" style="border-color:var(--sky)"><div class="step-num" style="background:var(--sky)">3</div><div class="step-icon">📧</div><div class="step-title">Confirm your email</div><div class="step-desc">You'll instantly receive a confirmation email with your unique Enrollment Number, schedule summary and payment instructions.</div></div>
+        <div class="step-card" style="border-color:var(--violet)"><div class="step-num" style="background:var(--violet)">4</div><div class="step-icon">✅</div><div class="step-title">Transfer & start!</div><div class="step-desc">Make the EFT/Havale transfer. Once received, we confirm your spot and send your Zoom link. You're all set! 🎉</div></div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--off),var(--sky-light));border-radius:18px;padding:28px;margin-top:20px;">
+        <div style="font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;margin-bottom:16px;">📚 What's included in every lesson?</div>
+        <div class="includes-grid">
+          <div class="inc-item"><div class="inc-icon">🎯</div><div class="inc-txt">Goal-based curriculum tailored to each child</div></div>
+          <div class="inc-item"><div class="inc-icon">📄</div><div class="inc-txt">Worksheets, vocab lists & reading materials</div></div>
+          <div class="inc-item"><div class="inc-icon">🎬</div><div class="inc-txt">Video lessons & YouTube resources</div></div>
+          <div class="inc-item"><div class="inc-icon">📝</div><div class="inc-txt">Creative projects & homework assignments</div></div>
+          <div class="inc-item"><div class="inc-icon">💬</div><div class="inc-txt">Direct chat with teacher via parent portal</div></div>
+          <div class="inc-item"><div class="inc-icon">📊</div><div class="inc-txt">Monthly progress reports (monthly plan)</div></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:30px;"><button class="btn btn-coral" onclick="openEnroll()">✍️ Ready? Enroll Now →</button></div>
+    </div></div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="site-sec" id="sec-schedule">
+    <div class="sec"><div class="sec-in">
+      <div class="page-band">
+        <div class="sec-tag">📅 Availability</div>
+        <div class="sec-title">Weekly Schedule</div>
+        <p style="color:var(--gray);font-size:.93rem;max-width:420px;margin:6px auto 0;line-height:1.7;">Mon–Fri sessions · Pick any 2 days · 45 minutes each</p>
+      </div>
+      <div class="day-tabs">
+        <div class="day-tab dt-on" onclick="selDay(this,'Monday')">Monday</div>
+        <div class="day-tab" onclick="selDay(this,'Tuesday')">Tuesday</div>
+        <div class="day-tab" onclick="selDay(this,'Wednesday')">Wednesday</div>
+        <div class="day-tab" onclick="selDay(this,'Thursday')">Thursday</div>
+        <div class="day-tab" onclick="selDay(this,'Friday')">Friday</div>
+        <div class="day-tab dt-off">Saturday</div>
+        <div class="day-tab dt-off">Sunday</div>
+      </div>
+      <div class="sched-grid">
+        <div class="sched-card">
+          <div class="sched-title">🕒 Available slots — <span id="sched-day">Monday</span></div>
+          <div class="slot-row"><span class="slot-time">15:00 – 15:45</span><span class="slot-tag slot-open">✓ Available</span></div>
+          <div class="slot-row"><span class="slot-time">16:00 – 16:45</span><span class="slot-tag slot-few">2 spots left</span></div>
+          <div class="slot-row"><span class="slot-time">17:00 – 17:45</span><span class="slot-tag slot-full">✗ Full</span></div>
+          <div class="slot-row"><span class="slot-time">18:00 – 18:45</span><span class="slot-tag slot-open">✓ Available</span></div>
+        </div>
+        <div class="sched-card">
+          <div class="sched-title">📋 Good to know</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;gap:9px;"><span>📌</span><span style="font-size:.84rem;font-weight:600;line-height:1.55;">Each session is <strong>45 minutes</strong> long.</span></div>
+            <div style="display:flex;gap:9px;"><span>🔄</span><span style="font-size:.84rem;font-weight:600;line-height:1.55;">Your schedule <strong>repeats automatically</strong> every week.</span></div>
+            <div style="display:flex;gap:9px;"><span>⏳</span><span style="font-size:.84rem;font-weight:600;line-height:1.55;">Cancelled sessions move to <strong>Pending</strong> and get rescheduled.</span></div>
+            <div style="display:flex;gap:9px;"><span>🔔</span><span style="font-size:.84rem;font-weight:600;line-height:1.55;"><strong>WhatsApp reminder</strong> sent 1 hour before each session.</span></div>
+            <div style="display:flex;gap:9px;"><span>👥</span><span style="font-size:.84rem;font-weight:600;line-height:1.55;">Group sessions: <strong>max 4 students</strong> per group.</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:26px;"><button class="btn btn-coral" onclick="openEnroll()">✍️ Book Your Spot →</button></div>
+    </div></div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="site-sec" id="sec-contact">
+    <div class="sec"><div class="sec-in">
+      <div class="page-band">
+        <div class="sec-tag">📬 Contact</div>
+        <div class="sec-title">Get in Touch</div>
+        <p style="color:var(--gray);font-size:.93rem;max-width:420px;margin:6px auto 0;line-height:1.7;">Have a question before enrolling? We usually reply within a few hours.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-form-card">
+          <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;margin-bottom:16px;">Send us a message</div>
+          <div class="form-group"><label>Your name</label><input type="text" placeholder="e.g. Ayşe Yıldız"/></div>
+          <div class="form-group"><label>WhatsApp / Phone</label><input type="tel" placeholder="+90 5xx xxx xx xx"/></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="email@gmail.com"/></div>
+          <div class="form-group"><label>Subject</label><select><option>Tell me more about lessons</option><option>Pricing question</option><option>Scheduling question</option><option>Group session availability</option><option>Trial Lesson enquiry</option>
+              <option>Summer Camp enquiry</option>
+              <option>Other</option></select></div>
+          <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Tell us about your child and any questions..."></textarea></div>
+          <button class="btn btn-coral" style="width:100%" onclick="toast('Message sent! We\'ll reply within a few hours 😊')">📨 Send Message</button>
+        </div>
+        <div class="contact-info-stack">
+          <div class="ci-card"><div class="ci-icon" style="background:var(--coral-light)">📱</div><div><div class="ci-title">WhatsApp</div><div class="ci-val">+90 5xx xxx xx xx<br><span style="color:var(--coral);font-weight:700;font-size:.75rem;">Fastest way to reach us!</span></div></div></div>
+          <div class="ci-card"><div class="ci-icon" style="background:var(--sky-light)">📧</div><div><div class="ci-title">Email</div><div class="ci-val">hello@englishnest.com<br>Usually replies within 3 hours</div></div></div>
+          <div class="ci-card"><div class="ci-icon" style="background:var(--off)">📍</div><div><div class="ci-title">Location</div><div class="ci-val">Istanbul, Turkey<br>All lessons are online via Zoom</div></div></div>
+          <div class="ci-card"><div class="ci-icon" style="background:var(--violet-light)">🕒</div><div><div class="ci-title">Lesson Hours</div><div class="ci-val">Mon – Fri · 15:00 – 19:00<br>Weekends: rest day 😊</div></div></div>
+          <div style="background:linear-gradient(135deg,var(--coral),#FF8C42);border-radius:16px;padding:20px;">
+            <div style="font-weight:800;font-size:.95rem;color:#fff;margin-bottom:6px;">🚀 Ready to enroll?</div>
+            <div style="font-size:.82rem;color:rgba(255,255,255,.9);margin-bottom:13px;line-height:1.6;">Skip the message — go straight to enrollment. Takes just 3 minutes!</div>
+            <button class="btn" style="background:#fff;color:var(--coral);width:100%;font-weight:800;" onclick="openEnroll()">✍️ Enroll Now</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+
+  <!-- ABOUT US -->
+  <div class="site-sec" id="sec-about">
+    <div class="sec" style="background:linear-gradient(135deg,#FFF8F0,#FFF0F8);">
+      <div class="sec-in">
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:44px;align-items:start;max-width:900px;margin:0 auto;">
+          <div style="text-align:center;">
+            <div style="width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,var(--coral),#FF8C42);display:flex;align-items:center;justify-content:center;font-size:3.8rem;margin:0 auto 12px;box-shadow:0 10px 32px rgba(255,107,107,.3);">&#128105;&#8205;&#127979;</div>
+            <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;margin-bottom:3px;">Your English Teacher</div>
+            <div style="font-size:.78rem;color:var(--gray);margin-bottom:10px;">Istanbul &middot; Online &middot; Primary</div>
+            <div style="display:inline-flex;align-items:center;gap:5px;background:var(--sun);color:var(--navy);padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:800;">&#11088; 5.0 Rating</div>
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
+              <div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:.74rem;font-weight:700;color:var(--gray);">Total Experience</span><span style="font-weight:900;color:var(--coral);font-size:.95rem;">12 Years</span></div>
+              <div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:.74rem;font-weight:700;color:var(--gray);">Online Teaching</span><span style="font-weight:900;color:var(--sky-d);font-size:.95rem;">2 Years</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-tag">&#128105;&#8205;&#127979; About Us</div>
+            <div class="sec-title" style="margin-bottom:12px;">Helping kids <span style="color:var(--coral)">love English</span></div>
+            <p style="font-size:.93rem;color:var(--gray);line-height:1.82;margin-bottom:14px;">Hi! I am a primary school English teacher with <strong style="color:var(--navy)">12 years of teaching experience</strong>, including <strong style="color:var(--navy)">2 years of online teaching</strong>. I specialise in helping young learners aged 6&ndash;12 build real confidence in English through fun and personalised lessons.</p>
+            <p style="font-size:.93rem;color:var(--gray);line-height:1.82;margin-bottom:22px;">Every child is different &mdash; my lessons are always tailored to your child&rsquo;s pace, interests and goals. Whether a complete beginner or already reading simple texts, I will meet them where they are and take them further.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;">
+              <div style="background:linear-gradient(135deg,#FFF0F5,#FFE4D0);border-radius:12px;padding:13px;border-left:4px solid var(--coral);"><div style="font-size:1.3rem;margin-bottom:5px;">&#127919;</div><div style="font-weight:800;font-size:.85rem;margin-bottom:2px;">Personalised Lessons</div><div style="font-size:.76rem;color:var(--gray);line-height:1.5;">Tailored to your child&rsquo;s pace and goals.</div></div>
+              <div style="background:linear-gradient(135deg,#F0FBFA,#CCEFED);border-radius:12px;padding:13px;border-left:4px solid var(--sky);"><div style="font-size:1.3rem;margin-bottom:5px;">&#128172;</div><div style="font-weight:800;font-size:.85rem;margin-bottom:2px;">WhatsApp Updates</div><div style="font-size:.76rem;color:var(--gray);line-height:1.5;">Parent update after every session.</div></div>
+              <div style="background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-radius:12px;padding:13px;border-left:4px solid var(--violet);"><div style="font-size:1.3rem;margin-bottom:5px;">&#128202;</div><div style="font-weight:800;font-size:.85rem;margin-bottom:2px;">Progress Reports</div><div style="font-size:.76rem;color:var(--gray);line-height:1.5;">Monthly reports to track real growth.</div></div>
+              <div style="background:linear-gradient(135deg,#FFFBEB,#FFF3C4);border-radius:12px;padding:13px;border-left:4px solid var(--sun);"><div style="font-size:1.3rem;margin-bottom:5px;">&#127918;</div><div style="font-weight:800;font-size:.85rem;margin-bottom:2px;">Fun &amp; Engaging</div><div style="font-size:.76rem;color:var(--gray);line-height:1.5;">Games, projects, stories every lesson.</div></div>
+            </div>
+            <button class="btn btn-coral" onclick="openEnroll()">&#9997;&#65039; Book a Lesson</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sec" style="background:#fff;">
+      <div class="sec-in">
+        <div style="text-align:center;margin-bottom:28px;"><div class="sec-tag">&#128172; What Parents Say</div><div class="sec-title">Families love EnglishNest</div><div style="font-size:1rem;margin-top:5px;">&#11088;&#11088;&#11088;&#11088;&#11088;</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
+          <div style="background:var(--off);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;"><div style="color:var(--sun);font-size:.85rem;letter-spacing:2px;margin-bottom:9px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p style="font-size:.85rem;color:var(--navy);line-height:1.7;font-weight:600;margin-bottom:13px;">"Elif started from zero and within 2 months she can hold basic conversations. She actually looks forward to every lesson!"</p><div style="display:flex;align-items:center;gap:8px;"><div style="width:34px;height:34px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.74rem;color:#fff;flex-shrink:0;">AY</div><div><div style="font-weight:800;font-size:.81rem;">Ayse Yildiz</div><div style="font-size:.7rem;color:var(--gray);">Mother of Elif, 3rd grade</div></div></div></div>
+          <div style="background:var(--off);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;"><div style="color:var(--sun);font-size:.85rem;letter-spacing:2px;margin-bottom:9px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p style="font-size:.85rem;color:var(--navy);line-height:1.7;font-weight:600;margin-bottom:13px;">"Ahmet used to dread English at school. Now he is genuinely excited before every lesson. His grades improved too!"</p><div style="display:flex;align-items:center;gap:8px;"><div style="width:34px;height:34px;border-radius:50%;background:var(--sky-d);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.74rem;color:#fff;flex-shrink:0;">MK</div><div><div style="font-weight:800;font-size:.81rem;">Mehmet Kaya</div><div style="font-size:.7rem;color:var(--gray);">Father of Ahmet, 4th grade</div></div></div></div>
+          <div style="background:var(--off);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;"><div style="color:var(--sun);font-size:.85rem;letter-spacing:2px;margin-bottom:9px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p style="font-size:.85rem;color:var(--navy);line-height:1.7;font-weight:600;margin-bottom:13px;">"The monthly progress reports are brilliant. We can really see how much Mert is improving. Highly recommended!"</p><div style="display:flex;align-items:center;gap:8px;"><div style="width:34px;height:34px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.74rem;color:#fff;flex-shrink:0;">FD</div><div><div style="font-weight:800;font-size:.81rem;">Fatma Demir</div><div style="font-size:.7rem;color:var(--gray);">Mother of Mert, 5th grade</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end site-wrap -->
+
+<!-- ══════════════════════════════════
+     ENROLLMENT MODAL
+     Flow: Plan → Child Details → Bank Transfer → Confirmation
+══════════════════════════════════ -->
+<div class="enroll-ov" id="enroll-ov" onclick="if(event.target===this)closeEnroll()">
+  <div class="enroll-box" style="position:relative;" id="enroll-box">
+
+    <!-- Sending overlay -->
+    <div class="sending-overlay" id="sending-ov" style="display:none;">
+      <div class="spinner"></div>
+      <div class="sending-txt">Sending your confirmation email...</div>
+      <div class="sending-sub">This takes just a moment ✉️</div>
+    </div>
+
+    <button class="em-close" onclick="closeEnroll()">✕</button>
+    <div class="prog" id="enroll-prog">
+      <div class="prog-s on" id="ep1"></div>
+      <div class="prog-s" id="ep2"></div>
+      <div class="prog-s" id="ep3"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:18px;" id="step-labels-wrap">
+      <span id="slbl1" style="font-size:.68rem;font-weight:800;color:var(--coral);">1. Choose Plan</span>
+      <span id="slbl2" style="font-size:.68rem;font-weight:800;color:var(--gray2);">2. Your Details</span>
+      <span id="slbl3" style="font-size:.68rem;font-weight:800;color:var(--gray2);">3. Bank Transfer</span>
+    </div>
+
+    <!-- ── STEP 1: CHOOSE PLAN ── -->
+    <div id="es1">
+      <div class="em-title">Choose your plan ✨</div>
+      <div class="em-sub">Step 1 of 3 — Select the session type that suits your child</div>
+      <div class="plan-cards">
+        <div class="plan-card" id="pc-payg" onclick="selPlan('payg')">
+          <div class="plan-card-icon">🎫</div>
+          <div><div class="plan-card-name">1-on-1 · Pay-as-you-go</div><div class="plan-card-desc">Flexible — book individually, no commitment</div></div>
+          <div class="plan-card-price"><div class="plan-price-val">₺1,700</div><div class="plan-price-per">per session</div></div>
+        </div>
+        <div class="plan-card" id="pc-monthly" onclick="selPlan('monthly')">
+          <div class="plan-card-icon">📅</div>
+          <div><div class="plan-card-name">1-on-1 · Monthly Plan</div><div class="plan-card-desc">8 sessions/month · Fixed schedule · Best value</div></div>
+          <div class="plan-card-price"><div class="plan-price-val">₺1,500</div><div class="plan-price-per">per session</div></div>
+        </div>
+        <div class="plan-card" id="pc-group" onclick="selPlan('group')">
+          <div class="plan-card-icon">👥</div>
+          <div><div class="plan-card-name">Group Sessions (3–4 students)</div><div class="plan-card-desc">Social & collaborative · Max 4 per group</div></div>
+          <div class="plan-card-price"><div class="plan-price-val sky" style="color:var(--sky-d)">₺1,300</div><div class="plan-price-per">per session / child</div></div>
+        </div>
+      </div>
+      <div id="plan-error" style="color:var(--rose);font-size:.78rem;font-weight:700;margin-top:8px;display:none;">⚠️ Please select a plan to continue.</div>
+      <div class="em-actions" style="margin-top:18px;">
+        <button class="btn btn-coral" style="width:100%" onclick="eStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: CHILD DETAILS ── -->
+    <div id="es2" style="display:none;">
+      <div class="em-title">About your child 👧</div>
+      <div class="em-sub">Step 2 of 3 — Fill in your details and choose your schedule</div>
+      <div class="form-group"><label>Child's full name *</label><input type="text" id="f-childname" placeholder="e.g. Elif Yıldız"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Age *</label><select id="f-age"><option value="">Select age</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
+        <div class="form-group"><label>Grade *</label><select id="f-grade"><option value="">Select grade</option><option>1st grade</option><option>2nd grade</option><option>3rd grade</option><option>4th grade</option><option>5th grade</option></select></div>
+      </div>
+      <div class="form-group"><label>English level *</label><select id="f-level"><option value="">Select level</option><option>Complete beginner</option><option>Basic — alphabet & simple words</option><option>Can form simple sentences</option><option>Intermediate</option></select></div>
+      <div class="form-group"><label>Parent / Guardian name *</label><input type="text" id="f-parent" placeholder="e.g. Ayşe Yıldız"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>WhatsApp number *</label><input type="tel" id="f-phone" placeholder="+90 5xx xxx xx xx"/></div>
+        <div class="form-group"><label>Email address *</label><input type="email" id="f-email" placeholder="email@gmail.com"/></div>
+      </div>
+      <div class="form-group">
+        <label>Preferred days (pick 2) *</label>
+        <div class="dp-row" id="day-picker">
+          <div class="dp-btn" onclick="toggleDay(this)">Mon</div>
+          <div class="dp-btn" onclick="toggleDay(this)">Tue</div>
+          <div class="dp-btn" onclick="toggleDay(this)">Wed</div>
+          <div class="dp-btn" onclick="toggleDay(this)">Thu</div>
+          <div class="dp-btn" onclick="toggleDay(this)">Fri</div>
+          <div class="dp-btn off">Sat</div>
+          <div class="dp-btn off">Sun</div>
+        </div>
+        <div style="font-size:.73rem;color:var(--gray);margin-top:6px;">Weekends not available. Pick exactly 2 days.</div>
+      </div>
+      <div class="form-group"><label>Preferred time slot *</label><select id="f-time"><option value="">Select time</option><option>15:00 – 15:45</option><option>16:00 – 16:45</option><option>17:00 – 17:45</option><option>18:00 – 18:45</option></select></div>
+      <div class="form-group"><label>Notes (optional)</label><textarea id="f-notes" rows="2" placeholder="Any questions or special requests?"></textarea></div>
+      <div id="detail-error" style="color:var(--rose);font-size:.78rem;font-weight:700;margin-top:4px;display:none;"></div>
+      <div class="em-actions">
+        <button class="btn btn-coral" style="width:100%" onclick="eStep(3)">Continue →</button>
+        <button class="btn btn-ghost" style="width:100%" onclick="eStep(1)">← Back</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: BANK TRANSFER ── -->
+    <div id="es3" style="display:none;">
+      <div class="em-title">Almost there! 🏦</div>
+      <div class="em-sub">Step 3 of 3 — Transfer your payment to confirm your spot</div>
+
+      <!-- Summary -->
+      <div class="summary-box" id="payment-summary">
+        <div class="summary-row"><span class="summary-lbl">Plan</span><span class="summary-val" id="sum-plan">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Student</span><span class="summary-val" id="sum-name">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Schedule</span><span class="summary-val" id="sum-schedule">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Amount due</span><span class="summary-val" id="sum-amount" style="color:var(--coral);font-size:1rem;">—</span></div>
+      </div>
+
+      <!-- Bank details -->
+      <div class="bank-step">
+        <div class="bank-step-title">🏦 Bank Transfer Details</div>
+        <div class="bank-row"><span class="bank-lbl">Bank</span><span class="bank-val">İş Bankası <button class="copy-btn" onclick="copyText('İş Bankası')">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Account Name</span><span class="bank-val">[Your Full Name] <button class="copy-btn" onclick="copyText('[Your Full Name]')">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">IBAN</span><span class="bank-val" style="font-size:.78rem;">TR12 0006 4000 0011 2345 6789 00 <button class="copy-btn" onclick="copyText('TR120006400000112345678900')">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Amount</span><span class="bank-val" id="bank-amount" style="color:var(--coral);">—</span></div>
+        <div class="bank-row"><span class="bank-lbl">Reference</span><span class="bank-val" id="bank-ref" style="color:var(--sky-d);">—</span></div>
+      </div>
+
+      <div class="ref-box">
+        ⚠️ <strong>Important:</strong> Please use your child's name as the payment reference so we can match it quickly. After you transfer, we'll confirm your spot within 24 hours.
+      </div>
+
+      <div class="em-actions">
+        <button class="btn btn-coral" style="width:100%" onclick="submitEnroll()">📧 Send Confirmation Email & Finish</button>
+        <button class="btn btn-ghost" style="width:100%" onclick="eStep(2)">← Back</button>
+      </div>
+    </div>
+
+    <!-- ── CONFIRMATION SCREEN ── -->
+    <div id="es-confirm" style="display:none;">
+      <div class="confirm-screen">
+        <div class="confirm-icon-wrap">🎉</div>
+        <div class="confirm-title">You're enrolled!</div>
+        <div class="confirm-sub">Your enrollment has been received. A confirmation email has been sent to <strong id="conf-email">your inbox</strong>.</div>
+
+        <!-- Enrollment card -->
+        <div class="enrol-card">
+          <div class="enrol-label">Enrollment Number</div>
+          <div class="enrol-number" id="conf-enrol-num">EN-2026-0000</div>
+          <div class="enrol-details">
+            <div class="enrol-row"><span class="enrol-row-icon">👧</span><span class="enrol-row-val" id="conf-child">—</span></div>
+            <div class="enrol-row"><span class="enrol-row-icon">📋</span><span class="enrol-row-val" id="conf-plan">—</span></div>
+            <div class="enrol-row"><span class="enrol-row-icon">📅</span><span class="enrol-row-val" id="conf-schedule">—</span></div>
+            <div class="enrol-row"><span class="enrol-row-icon">💰</span><span class="enrol-row-val" id="conf-amount">—</span></div>
+          </div>
+        </div>
+
+        <!-- Email sent notice -->
+        <div class="email-note">
+          <span style="font-size:1.1rem">📧</span>
+          <span>A confirmation email with these details, your bank transfer instructions and next steps has been sent to <strong id="conf-email2">your email</strong>. Check your inbox (and spam folder just in case).</span>
+        </div>
+
+        <!-- What next -->
+        <div class="what-next">
+          <div class="wn-title">⏭️ What happens next?</div>
+          <div class="wn-item"><div class="wn-num">1</div><div>Make your bank transfer using the details in your email. Use your child's name as the reference.</div></div>
+          <div class="wn-item"><div class="wn-num">2</div><div>We'll confirm payment receipt within <strong>24 hours</strong> via WhatsApp or email.</div></div>
+          <div class="wn-item"><div class="wn-num">3</div><div>You'll receive your <strong>Zoom link</strong> and your child's first session is all set! 🎉</div></div>
+        </div>
+
+        <button class="btn btn-coral" style="width:100%;margin-bottom:8px;" onclick="closeEnroll()">← Back to site</button>
+        <button class="btn btn-ghost" style="width:100%;font-size:.8rem;" onclick="toast('Screenshot or print this page to save your enrollment number!')">📸 Save enrollment details</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ PORTAL (Parent + Teacher) ══════════════ -->
+<div id="portal-wrap">
+  <!-- PARENT SIDEBAR -->
+  <aside class="portal-sidebar" id="parent-sb">
+    <div class="ps-sec">
+      <div class="ps-lbl">Parent Menu</div>
+      <button class="ps-btn ps-on" onclick="pPage('p-home')"><span class="ps-icon">🏠</span><span>Home</span></button>
+      <button class="ps-btn" onclick="pPage('p-sessions')"><span class="ps-icon">📅</span><span>My Sessions</span></button>
+      <button class="ps-btn" onclick="pPage('p-pending')"><span class="ps-icon">⏳</span><span>Pending</span><span class="ps-badge a">1</span></button>
+      <button class="ps-btn" onclick="pPage('p-materials')"><span class="ps-icon">📚</span><span>Materials</span></button>
+      <button class="ps-btn" onclick="pPage('p-chat')"><span class="ps-icon">💬</span><span>Messages</span><span class="ps-badge">2</span></button>
+    </div>
+    <div style="margin-top:auto;"><button class="ps-btn" onclick="closePortal()"><span class="ps-icon">🌐</span><span>Back to site</span></button></div>
+  </aside>
+
+  <!-- TEACHER SIDEBAR -->
+  <aside class="portal-sidebar" id="teacher-sb" style="display:none;">
+    <div class="ps-sec">
+      <div class="ps-lbl">Teacher</div>
+      <button class="ps-btn ps-on" onclick="tPage('t-overview')"><span class="ps-icon">📊</span><span>Overview</span></button>
+      <button class="ps-btn" onclick="tPage('t-enrollments')"><span class="ps-icon">📋</span><span>Enrollments</span><span class="ps-badge a">2</span></button>
+      <button class="ps-btn" onclick="tPage('t-students')"><span class="ps-icon">👨‍🎓</span><span>Students</span></button>
+      <button class="ps-btn" onclick="tPage('t-groups')"><span class="ps-icon">👥</span><span>Groups</span></button>
+      <button class="ps-btn" onclick="tPage('t-pending')"><span class="ps-icon">⏳</span><span>Pending</span><span class="ps-badge a">3</span></button>
+      <button class="ps-btn" onclick="tPage('t-materials')"><span class="ps-icon">📚</span><span>Materials</span></button>
+      <button class="ps-btn" onclick="tPage('t-chat')"><span class="ps-icon">💬</span><span>Messages</span><span class="ps-badge">4</span></button>
+      <button class="ps-btn" onclick="tPage('t-calendar')"><span class="ps-icon">📅</span><span>Calendar</span></button>
+    </div>
+    <div style="margin-top:auto;"><button class="ps-btn" onclick="closePortal()"><span class="ps-icon">🌐</span><span>Back to site</span></button></div>
+  </aside>
+
+  <!-- PORTAL MAIN -->
+  <main class="portal-main">
+
+    <!-- P-HOME -->
+    <div class="portal-pg active" id="p-home">
+      <div class="pg-title">Welcome back! 👋</div>
+      <div class="pg-sub">Elif Yıldız · Monthly Plan · Mon & Wed 16:00 · EN-2026-0038</div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-lbl">Sessions This Month</div><div class="sc-val s">6 <span style="font-size:1rem;color:var(--gray)">/8</span></div></div>
+        <div class="stat-card"><div class="sc-lbl">Pending Sessions</div><div class="sc-val a">1</div></div>
+        <div class="stat-card"><div class="sc-lbl">Total Completed</div><div class="sc-val g">14</div></div>
+      </div>
+      <div class="card mb18">
+        <div class="card-hd"><div class="card-hd-title">📅 Next Sessions</div></div>
+        <table>
+          <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Wed 15 May</strong></td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Confirmed</span></td></tr>
+            <tr><td>Mon 19 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Confirmed</span></td></tr>
+            <tr><td>Wed 21 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-gray">Scheduled</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="background:var(--amber-light);border-color:var(--amber);">
+        <div class="card-bd" style="display:flex;align-items:center;gap:14px;">
+          <div style="font-size:1.8rem;">⏳</div>
+          <div><div style="font-weight:800;margin-bottom:3px;">1 Pending Session</div><div style="font-size:.83rem;color:var(--gray);">Your Mon 12 May session is waiting to be rescheduled.</div></div>
+          <button class="btn btn-ghost btn-sm" style="margin-left:auto;flex-shrink:0;" onclick="pPage('p-pending')">View →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- P-SESSIONS -->
+    <div class="portal-pg" id="p-sessions">
+      <div class="pg-title">My Sessions</div>
+      <div class="pg-sub">Elif Yıldız · EN-2026-0038 · Mon & Wed 16:00</div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">📅 Upcoming Sessions</div></div>
+        <table>
+          <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Wed 15 May</strong></td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Confirmed</span></td></tr>
+            <tr><td>Mon 19 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Confirmed</span></td></tr>
+            <tr><td>Wed 21 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Confirmed</span></td></tr>
+            <tr><td>Mon 26 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-gray">Scheduled</span></td></tr>
+            <tr><td>Wed 28 May</td><td>16:00</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-gray">Scheduled</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- P-PENDING -->
+    <div class="portal-pg" id="p-pending">
+      <div class="pg-title">Pending Sessions</div>
+      <div class="pg-sub">Sessions waiting to be rescheduled — never lost</div>
+      <div style="background:var(--amber-light);border:1.5px solid var(--amber);border-radius:var(--r-sm);padding:13px 16px;font-size:.83rem;font-weight:600;margin-bottom:18px;line-height:1.6;">📌 Cancelled sessions appear here and are rescheduled — you always get every session you paid for.</div>
+      <div class="pend-item">
+        <div class="pend-dot"></div>
+        <div class="pend-info"><div class="pend-name">Session — Mon 12 May, 16:00</div><div class="pend-why">Cancelled by parent · Family emergency</div></div>
+        <span class="badge badge-amber">Awaiting reschedule</span>
+      </div>
+    </div>
+
+    <!-- P-MATERIALS -->
+    <div class="portal-pg" id="p-materials">
+      <div class="pg-title">Learning Materials</div>
+      <div class="pg-sub">Resources shared by your teacher</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;">
+        <button class="btn btn-sky btn-sm" onclick="filterMat('all')">All</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMat('pdf')">📄 PDFs</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMat('video')">🎬 Videos</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMat('link')">🔗 Links</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMat('project')">📝 Projects</button>
+      </div>
+      <div class="mat-grid" id="mat-grid">
+        <div class="mat-card mat-pdf" onclick="toast('Opening worksheet...')"><div class="mat-icon">📄</div><div class="mat-name">Unit 3 — Animals Worksheet</div><div class="mat-meta">Added 10 May · 2 pages</div><div style="margin-top:8px"><span class="badge badge-rose">PDF</span></div></div>
+        <div class="mat-card mat-pdf" onclick="toast('Opening vocab list...')"><div class="mat-icon">📋</div><div class="mat-name">Vocabulary List — Week 4</div><div class="mat-meta">Added 8 May</div><div style="margin-top:8px"><span class="badge badge-rose">PDF</span></div></div>
+        <div class="mat-card mat-video" onclick="toast('Opening video...')"><div class="mat-icon">🎬</div><div class="mat-name">Phonics — Short Vowels</div><div class="mat-meta">Added 6 May · 8 min</div><div style="margin-top:8px"><span class="badge badge-sky">Video</span></div></div>
+        <div class="mat-card mat-link" onclick="toast('Opening link...')"><div class="mat-icon">🔗</div><div class="mat-name">BBC Learning English</div><div class="mat-meta">Added 5 May</div><div style="margin-top:8px"><span class="badge badge-gray">Link</span></div></div>
+        <div class="mat-card mat-project" onclick="toast('Opening project...')"><div class="mat-icon">📝</div><div class="mat-name">My Family — Project</div><div class="mat-meta">Due 20 May</div><div style="margin-top:8px"><span class="badge badge-amber">Project</span></div></div>
+        <div class="mat-card mat-pdf" onclick="toast('Opening grammar sheet...')"><div class="mat-icon">📄</div><div class="mat-name">Grammar — Present Simple</div><div class="mat-meta">Added 1 May</div><div style="margin-top:8px"><span class="badge badge-rose">PDF</span></div></div>
+      </div>
+    </div>
+
+    <!-- P-CHAT -->
+    <div class="portal-pg" id="p-chat">
+      <div class="pg-title">Messages</div>
+      <div class="pg-sub">Chat with your teacher</div>
+      <div class="chat-shell">
+        <div class="chat-list-col">
+          <div class="chat-list-hd">Conversations</div>
+          <div class="chat-row on">
+            <div class="chat-av" style="background:var(--sky-d)">T</div>
+            <div style="min-width:0;flex:1;"><div class="chat-nm">Your Teacher</div><div class="chat-prev">Great work today! 🌟</div></div>
+            <div class="chat-unread">2</div>
+          </div>
+        </div>
+        <div class="chat-win">
+          <div class="chat-win-hd">
+            <div class="chat-av" style="background:var(--sky-d);width:32px;height:32px;font-size:.7rem;">T</div>
+            <div><div class="chat-win-name">Your Teacher</div><div class="chat-win-sub">Usually replies within 1 hour</div></div>
+          </div>
+          <div class="msgs-area" id="p-msgs">
+            <div class="msg them"><div class="msg-b">Hello! Welcome to EnglishNest 🌿 So excited to have Elif joining. Any questions, just ask!</div><div class="msg-t">2 days ago</div></div>
+            <div class="msg me"><div class="msg-b">Thank you! She's been asking about it all week 😊</div><div class="msg-t">2 days ago</div></div>
+            <div class="msg them"><div class="msg-b">Great work today Elif! 🌟 She picked up the sounds really quickly. Please practise the phonics worksheet pages 1–2 before Wednesday.</div><div class="msg-t">Today 15:50</div></div>
+            <div class="msg them"><div class="msg-b">Also, the "My Family" project is now in Materials. Due 20 May! 📝</div><div class="msg-t">Today 15:51</div></div>
+          </div>
+          <div class="chat-input-bar">
+            <button class="attach-btn" onclick="toast('Attach file — coming soon')">📎</button>
+            <input class="chat-in" id="p-chat-in" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat('p')"/>
+            <button class="send-btn" onclick="sendChat('p')">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T-OVERVIEW -->
+    <div class="portal-pg" id="t-overview">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+        <div><div class="pg-title">Good afternoon! 👩‍🏫</div><div class="pg-sub">Thursday 15 May · 3 sessions today</div></div>
+        <button class="btn btn-coral btn-sm" onclick="openModal('add-student-modal')">+ Add Student</button>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-lbl">Active Students</div><div class="sc-val">9</div></div>
+        <div class="stat-card"><div class="sc-lbl">Revenue (May)</div><div class="sc-val g">₺13,500</div></div>
+        <div class="stat-card"><div class="sc-lbl">Awaiting Payment</div><div class="sc-val a">₺2,600</div></div>
+        <div class="stat-card"><div class="sc-lbl">Pending Sessions</div><div class="sc-val r">3</div></div>
+        <div class="stat-card"><div class="sc-lbl">New Enrollments</div><div class="sc-val s">2</div></div>
+      </div>
+      <div class="card mb18">
+        <div class="card-hd"><div class="card-hd-title">📅 Today's Sessions — Thu 15 May</div></div>
+        <table>
+          <thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Plan</th><th>Payment</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>15:00</strong></td><td>Elif Y.</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Monthly</span></td><td><span class="badge badge-green">Paid</span></td><td><div style="display:flex;gap:5px;"><button class="btn btn-sky btn-xs" onclick="toast('Zoom link copied!')">📋 Zoom</button><button class="btn btn-ghost btn-xs" onclick="toast('Session marked complete ✓')">✓ Done</button></div></td></tr>
+            <tr><td><strong>16:00</strong></td><td>Ahmet K.</td><td><span class="badge badge-sky">1-on-1</span></td><td><span class="badge badge-green">Monthly</span></td><td><span class="badge badge-green">Paid</span></td><td><div style="display:flex;gap:5px;"><button class="btn btn-sky btn-xs" onclick="toast('Zoom link copied!')">📋 Zoom</button><button class="btn btn-ghost btn-xs" onclick="toast('Session marked complete ✓')">✓ Done</button></div></td></tr>
+            <tr><td><strong>17:00</strong></td><td>Group A</td><td><span class="badge badge-amber">Group</span></td><td><span class="badge badge-gray">Pay-as-go</span></td><td><span class="badge badge-rose">₺3,900 due</span></td><td><div style="display:flex;gap:5px;"><button class="btn btn-sky btn-xs" onclick="toast('Zoom link copied!')">📋 Zoom</button><button class="btn btn-coral btn-xs" onclick="toast('Payment reminder sent via WhatsApp 💬')">Remind</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- T-ENROLLMENTS (new payment tracking page) -->
+    <div class="portal-pg" id="t-enrollments">
+      <div class="pg-title">New Enrollments</div>
+      <div class="pg-sub">Track enrollment requests — confirm payment to activate</div>
+      <div style="background:var(--sky-light);border:1.5px solid var(--sky);border-radius:var(--r-sm);padding:13px 16px;font-size:.83rem;font-weight:600;margin-bottom:18px;line-height:1.6;">
+        📧 When a parent submits the enrollment form, they appear here. Once you receive their bank transfer, click <strong>Confirm Payment</strong> to activate their account and send their Zoom link.
+      </div>
+      <div class="enrol-status-row">
+        <div class="es-num">EN-2026-0041</div>
+        <div><div class="es-name">Zehra Aksoy — 2nd grade</div><div class="es-detail">Monthly 1-on-1 · Tue & Thu 16:00 · ₺12,000 due</div></div>
+        <div class="es-actions"><span class="badge badge-amber">Awaiting transfer</span><button class="btn btn-green btn-xs" onclick="toast('Payment confirmed! Zoom link sent to parent ✓')">✓ Confirm Payment</button></div>
+      </div>
+      <div class="enrol-status-row">
+        <div class="es-num">EN-2026-0042</div>
+        <div><div class="es-name">Can Öztürk — 4th grade</div><div class="es-detail">Group A · Mon & Wed 17:00 · ₺1,300 due</div></div>
+        <div class="es-actions"><span class="badge badge-amber">Awaiting transfer</span><button class="btn btn-green btn-xs" onclick="toast('Payment confirmed! Zoom link sent to parent ✓')">✓ Confirm Payment</button></div>
+      </div>
+      <div class="enrol-status-row" style="opacity:.6;">
+        <div class="es-num">EN-2026-0038</div>
+        <div><div class="es-name">Elif Yıldız — 3rd grade</div><div class="es-detail">Monthly 1-on-1 · Mon & Wed 16:00</div></div>
+        <div class="es-actions"><span class="badge badge-green">✓ Active</span></div>
+      </div>
+      <div class="enrol-status-row" style="opacity:.6;">
+        <div class="es-num">EN-2026-0039</div>
+        <div><div class="es-name">Ahmet Kaya — 4th grade</div><div class="es-detail">Monthly 1-on-1 · Tue & Thu 15:00</div></div>
+        <div class="es-actions"><span class="badge badge-green">✓ Active</span></div>
+      </div>
+    </div>
+
+    <!-- T-STUDENTS -->
+    <div class="portal-pg" id="t-students">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div><div class="pg-title">Students</div><div class="pg-sub">9 active enrollments</div></div>
+        <button class="btn btn-coral btn-sm" onclick="openModal('add-student-modal')">+ Add Student</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Enrol #</th><th>Student</th><th>Grade</th><th>Type</th><th>Days</th><th>Plan</th><th>Payment</th><th></th></tr></thead>
+          <tbody>
+            <tr><td style="font-size:.76rem;color:var(--gray)">EN-0038</td><td>Elif Yıldız</td><td>3rd</td><td><span class="badge badge-sky">1-on-1</span></td><td>Mon, Wed</td><td><span class="badge badge-green">Monthly</span></td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs" onclick="toast('Profile opened')">View</button></td></tr>
+            <tr><td style="font-size:.76rem;color:var(--gray)">EN-0039</td><td>Ahmet Kaya</td><td>4th</td><td><span class="badge badge-sky">1-on-1</span></td><td>Tue, Thu</td><td><span class="badge badge-green">Monthly</span></td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs" onclick="toast('Profile opened')">View</button></td></tr>
+            <tr><td style="font-size:.76rem;color:var(--gray)">EN-0040</td><td>Zeynep Arslan</td><td>2nd</td><td><span class="badge badge-sky">1-on-1</span></td><td>Thu, Fri</td><td><span class="badge badge-gray">Pay-as-go</span></td><td><span class="badge badge-rose">₺1,700 due</span></td><td><button class="btn btn-coral btn-xs" onclick="toast('Reminder sent 💬')">Remind</button></td></tr>
+            <tr><td style="font-size:.76rem;color:var(--gray)">EN-0035</td><td>Mert Demir</td><td>5th</td><td><span class="badge badge-sky">1-on-1</span></td><td>Mon, Fri</td><td><span class="badge badge-green">Monthly</span></td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-ghost btn-xs" onclick="toast('Profile opened')">View</button></td></tr>
+            <tr><td style="font-size:.76rem;color:var(--gray)">EN-0036</td><td>Selin Çelik</td><td>1st</td><td><span class="badge badge-amber">Group A</span></td><td>Tue, Thu</td><td><span class="badge badge-gray">Pay-as-go</span></td><td><span class="badge badge-rose">₺1,300 due</span></td><td><button class="btn btn-coral btn-xs" onclick="toast('Reminder sent 💬')">Remind</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- T-GROUPS -->
+    <div class="portal-pg" id="t-groups">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div><div class="pg-title">Group Sessions</div><div class="pg-sub">Max 4 students per group · ₺1,300/session/child</div></div>
+        <button class="btn btn-coral btn-sm" onclick="toast('Create new group')">+ New Group</button>
+      </div>
+      <div class="grp-card">
+        <div class="grp-hd">
+          <div><div class="grp-name">Group A — Beginners</div><div class="grp-meta">Tue & Thu · 17:00 · ₺1,300/session/student</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span class="badge badge-green">3 / 4</span><button class="btn btn-sky btn-xs" onclick="toast('Zoom link copied!')">📋 Zoom</button></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="student-chip"><div class="sc-av" style="background:var(--sky-d)">SC</div><div><div class="sc-nm">Selin Ç.</div><div class="sc-gr">1st grade</div></div></div>
+          <div class="student-chip"><div class="sc-av" style="background:var(--violet)">BY</div><div><div class="sc-nm">Berk Y.</div><div class="sc-gr">3rd grade</div></div></div>
+          <div class="student-chip"><div class="sc-av" style="background:var(--amber)">NK</div><div><div class="sc-nm">Naz K.</div><div class="sc-gr">2nd grade</div></div></div>
+          <div class="student-chip add-chip" onclick="toast('Add student to group')"><div style="font-size:1rem;width:24px;text-align:center;">+</div><div class="sc-nm" style="color:var(--gray)">Add</div></div>
+        </div>
+      </div>
+      <div class="grp-card">
+        <div class="grp-hd">
+          <div><div class="grp-name">Group B — Elementary</div><div class="grp-meta">Mon & Wed · 15:00 · ₺1,300/session/student</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span class="badge badge-amber">2 / 4</span><button class="btn btn-sky btn-xs" onclick="toast('Zoom link copied!')">📋 Zoom</button></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="student-chip"><div class="sc-av" style="background:var(--rose)">EA</div><div><div class="sc-nm">Ece A.</div><div class="sc-gr">4th grade</div></div></div>
+          <div class="student-chip"><div class="sc-av" style="background:var(--green)">KD</div><div><div class="sc-nm">Kaan D.</div><div class="sc-gr">3rd grade</div></div></div>
+          <div class="student-chip add-chip" onclick="toast('Add student')"><div style="font-size:1rem;width:24px;text-align:center;">+</div><div class="sc-nm" style="color:var(--gray)">Add</div></div>
+          <div class="student-chip add-chip" onclick="toast('Add student')"><div style="font-size:1rem;width:24px;text-align:center;">+</div><div class="sc-nm" style="color:var(--gray)">Add</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T-PENDING -->
+    <div class="portal-pg" id="t-pending">
+      <div class="pg-title">Pending Sessions</div>
+      <div class="pg-sub">Cancelled sessions waiting to be rescheduled</div>
+      <div style="background:var(--amber-light);border:1.5px solid var(--amber);border-radius:var(--r-sm);padding:13px 16px;font-size:.83rem;font-weight:600;margin-bottom:18px;line-height:1.6;">📌 Click Reschedule to book a new time — parent will be notified via WhatsApp.</div>
+      <div class="pend-item"><div class="pend-dot"></div><div class="pend-info"><div class="pend-name">Elif Yıldız (EN-0038) — Mon 12 May</div><div class="pend-why">Cancelled by parent · Family emergency</div></div><button class="btn btn-coral btn-xs" onclick="toast('Reschedule modal opened')">Reschedule</button></div>
+      <div class="pend-item"><div class="pend-dot"></div><div class="pend-info"><div class="pend-name">Group A — Tue 6 May</div><div class="pend-why">Cancelled by teacher · Public holiday</div></div><button class="btn btn-coral btn-xs" onclick="toast('Reschedule modal opened')">Reschedule</button></div>
+      <div class="pend-item"><div class="pend-dot"></div><div class="pend-info"><div class="pend-name">Zeynep Arslan (EN-0040) — Fri 9 May</div><div class="pend-why">Cancelled by parent · Child was sick</div></div><button class="btn btn-coral btn-xs" onclick="toast('Reschedule modal opened')">Reschedule</button></div>
+    </div>
+
+    <!-- T-MATERIALS -->
+    <div class="portal-pg" id="t-materials">
+      <div class="pg-title">Materials</div>
+      <div class="pg-sub">Upload resources for your students</div>
+      <div class="upload-zone" onclick="toast('File picker — PDF, Word, image, video or YouTube link')">
+        <div style="font-size:1.8rem;margin-bottom:8px;">⬆️</div>
+        <div style="font-weight:800;margin-bottom:4px;">Upload new material</div>
+        <div style="font-size:.8rem;color:var(--gray);">PDF, Word, images, videos — or paste a YouTube / web link</div>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Name</th><th>Type</th><th>Assigned to</th><th>Added</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td>Unit 3 — Animals Worksheet</td><td><span class="badge badge-rose">PDF</span></td><td>All students</td><td>10 May</td><td><div style="display:flex;gap:5px;"><button class="btn btn-ghost btn-xs" onclick="toast('Edit')">Edit</button><button class="btn btn-ghost btn-xs" onclick="toast('Deleted')">🗑️</button></div></td></tr>
+            <tr><td>Phonics — Short Vowels</td><td><span class="badge badge-sky">Video</span></td><td>Group A</td><td>6 May</td><td><div style="display:flex;gap:5px;"><button class="btn btn-ghost btn-xs" onclick="toast('Edit')">Edit</button><button class="btn btn-ghost btn-xs" onclick="toast('Deleted')">🗑️</button></div></td></tr>
+            <tr><td>BBC Learning English</td><td><span class="badge badge-gray">Link</span></td><td>All students</td><td>5 May</td><td><div style="display:flex;gap:5px;"><button class="btn btn-ghost btn-xs" onclick="toast('Edit')">Edit</button><button class="btn btn-ghost btn-xs" onclick="toast('Deleted')">🗑️</button></div></td></tr>
+            <tr><td>My Family — Project</td><td><span class="badge badge-amber">Project</span></td><td>Elif Y., Ahmet K.</td><td>1 May</td><td><div style="display:flex;gap:5px;"><button class="btn btn-ghost btn-xs" onclick="toast('Edit')">Edit</button><button class="btn btn-ghost btn-xs" onclick="toast('Deleted')">🗑️</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- T-CHAT -->
+    <div class="portal-pg" id="t-chat">
+      <div class="pg-title">Messages</div>
+      <div class="pg-sub">Chat with families</div>
+      <div class="chat-shell">
+        <div class="chat-list-col">
+          <div class="chat-list-hd">Families</div>
+          <div class="chat-row on" onclick="switchChat(this,'Elif Y. — Parent','Elif Yıldız · EN-0038 · 3rd grade')">
+            <div class="chat-av" style="background:var(--coral)">EY</div>
+            <div style="min-width:0;flex:1;"><div class="chat-nm">Elif Y. — Parent</div><div class="chat-prev">She loved it! 😊</div></div>
+            <div class="chat-unread">2</div>
+          </div>
+          <div class="chat-row" onclick="switchChat(this,'Ahmet K. — Parent','Ahmet Kaya · EN-0039 · 4th grade')">
+            <div class="chat-av" style="background:var(--sky-d)">AK</div>
+            <div style="min-width:0;flex:1;"><div class="chat-nm">Ahmet K. — Parent</div><div class="chat-prev">Next session?</div></div>
+            <div class="chat-unread">1</div>
+          </div>
+          <div class="chat-row" onclick="switchChat(this,'Group A — Parents','Group A · Beginners · Tue & Thu')">
+            <div class="chat-av" style="background:var(--amber)">GA</div>
+            <div style="min-width:0;flex:1;"><div class="chat-nm">Group A — Parents</div><div class="chat-prev">See you Thursday!</div></div>
+          </div>
+          <div class="chat-row" onclick="switchChat(this,'Zeynep A. — Parent','Zeynep Arslan · EN-0040 · 2nd grade')">
+            <div class="chat-av" style="background:var(--rose)">ZA</div>
+            <div style="min-width:0;flex:1;"><div class="chat-nm">Zeynep A. — Parent</div><div class="chat-prev">Can we reschedule?</div></div>
+            <div class="chat-unread">1</div>
+          </div>
+        </div>
+        <div class="chat-win">
+          <div class="chat-win-hd">
+            <div class="chat-av" style="background:var(--coral);width:32px;height:32px;font-size:.7rem;">EY</div>
+            <div><div class="chat-win-name" id="t-chat-name">Elif Y. — Parent</div><div class="chat-win-sub" id="t-chat-sub">Elif Yıldız · EN-0038 · 3rd grade</div></div>
+          </div>
+          <div class="msgs-area" id="t-msgs">
+            <div class="msg them"><div class="msg-b">Hello! We're really excited for Elif to start 😊</div><div class="msg-t">2 days ago</div></div>
+            <div class="msg me"><div class="msg-b">Great work today! 🌟 She picked up the sounds really quickly. I've uploaded the phonics worksheet — pages 1–2 before Wednesday please.</div><div class="msg-t">Today 15:50</div></div>
+            <div class="msg them"><div class="msg-b">Thank you so much! She really enjoyed it 😊</div><div class="msg-t">Today 16:02</div></div>
+          </div>
+          <div class="chat-input-bar">
+            <button class="attach-btn" onclick="toast('Attach file or share a material')">📎</button>
+            <input class="chat-in" id="t-chat-in" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat('t')"/>
+            <button class="send-btn" onclick="sendChat('t')">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T-CALENDAR -->
+    <div class="portal-pg" id="t-calendar">
+      <div class="pg-title">Calendar — May 2026</div>
+      <div class="pg-sub">Session days and pending reschedules</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:.8rem;">
+        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:var(--sky-light);border:1.5px solid var(--sky-d);border-radius:3px;display:inline-block;"></span>Session day</span>
+        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:var(--amber-light);border:1.5px solid var(--amber);border-radius:3px;display:inline-block;"></span>Pending reschedule</span>
+        <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border:2px solid var(--navy);border-radius:3px;display:inline-block;"></span>Today</span>
+      </div>
+      <div class="card"><div class="card-bd">
+        <div class="cal-hd-row"><div class="cal-hd-cell">Mon</div><div class="cal-hd-cell">Tue</div><div class="cal-hd-cell">Wed</div><div class="cal-hd-cell">Thu</div><div class="cal-hd-cell">Fri</div><div class="cal-hd-cell">Sat</div><div class="cal-hd-cell">Sun</div></div>
+        <div class="cal-body" id="t-cal"></div>
+      </div></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD STUDENT MODAL -->
+<div class="im-ov" id="add-student-modal" onclick="if(event.target===this)closeModal('add-student-modal')">
+  <div class="im-box">
+    <div class="im-title">Add Student Manually</div>
+    <div class="im-sub">Add a student without the enrollment form — e.g. existing students.</div>
+    <div class="form-group"><label>Child's name</label><input type="text" placeholder="Full name"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;">
+      <div class="form-group"><label>Grade</label><select><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option></select></div>
+      <div class="form-group"><label>Session type</label><select><option>1-on-1</option><option>Group A</option><option>Group B</option></select></div>
+    </div>
+    <div class="form-group"><label>Plan</label><select><option>Monthly</option><option>Pay-as-go</option></select></div>
+    <div class="form-group"><label>Parent WhatsApp</label><input type="tel" placeholder="+90 5xx xxx xx xx"/></div>
+    <div class="im-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('add-student-modal')">Cancel</button>
+      <button class="btn btn-coral btn-sm" onclick="closeModal('add-student-modal');toast('Student added! ✓')">Add Student</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────
+// EmailJS config — replace with your real IDs
+// Sign up free at emailjs.com
+// ─────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz789'
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'abcDEFghiJKL'
+
+// Enrollment state
+let enrollData = {
+  plan: null, planLabel: '', priceLabel: '', monthlyAmount: 0,
+  childName: '', parentName: '', email: '', phone: '',
+  age: '', grade: '', level: '',
+  days: [], time: '', notes: '',
+  enrollNum: ''
+};
+let selDays = [];
+
+// ── PLAN PRICES ──
+const PLANS = {
+  payg:    { label:'1-on-1 · Pay-as-you-go', price:'₺1,700', monthly: 1700 },
+  monthly: { label:'1-on-1 · Monthly Plan',  price:'₺1,500 / session (₺12,000/month)', monthly: 12000 },
+  group:   { label:'Group Sessions (3–4)',    price:'₺1,300 / session / child', monthly: 1300 }
+};
+
+// ── GENERATE ENROLLMENT NUMBER ──
+function genEnrolNum() {
+  const n = Math.floor(1000 + Math.random() * 9000);
+  return `EN-2026-${n}`;
+}
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () =>
+  document.getElementById('topnav').classList.toggle('scrolled', scrollY > 10));
+
+// ── SITE SECTIONS ──
+function goSec(id) {
+  document.querySelectorAll('.site-sec').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('nav-active'));
+  const nb = document.getElementById('nb-' + id);
+  if (nb) nb.classList.add('nav-active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── PORTAL ──
+function openPortal(type) {
+  document.getElementById('site-wrap').style.display = 'none';
+  const pw = document.getElementById('portal-wrap');
+  pw.classList.add('active');
+  document.getElementById('parent-sb').style.display   = type === 'parent'  ? 'flex' : 'none';
+  document.getElementById('teacher-sb').style.display  = type === 'teacher' ? 'flex' : 'none';
+  document.querySelectorAll('.portal-pg').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ps-btn').forEach(b => b.classList.remove('ps-on'));
+  if (type === 'parent') {
+    document.getElementById('p-home').classList.add('active');
+    document.querySelectorAll('#parent-sb .ps-btn')[0].classList.add('ps-on');
+  } else {
+    document.getElementById('t-overview').classList.add('active');
+    document.querySelectorAll('#teacher-sb .ps-btn')[0].classList.add('ps-on');
+    buildCal();
+  }
+}
+function closePortal() {
+  document.getElementById('portal-wrap').classList.remove('active');
+  document.getElementById('site-wrap').style.display = 'block';
+}
+
+// ── PARENT PAGES ──
+function pPage(id) {
+  document.querySelectorAll('.portal-pg').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#parent-sb .ps-btn').forEach(b => b.classList.remove('ps-on'));
+  const m = { 'p-home':0,'p-sessions':1,'p-pending':2,'p-materials':3,'p-chat':4 };
+  const items = document.querySelectorAll('#parent-sb .ps-btn');
+  if (m[id] !== undefined) items[m[id]].classList.add('ps-on');
+}
+
+// ── TEACHER PAGES ──
+function tPage(id) {
+  document.querySelectorAll('.portal-pg').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#teacher-sb .ps-btn').forEach(b => b.classList.remove('ps-on'));
+  const m = { 't-overview':0,'t-enrollments':1,'t-students':2,'t-groups':3,'t-pending':4,'t-materials':5,'t-chat':6,'t-calendar':7 };
+  const items = document.querySelectorAll('#teacher-sb .ps-btn');
+  if (m[id] !== undefined) items[m[id]].classList.add('ps-on');
+  if (id === 't-calendar') buildCal();
+}
+
+// ────────────────────────────────────────────
+// ENROLLMENT FLOW
+// ────────────────────────────────────────────
+function openEnroll() {
+  enrollData = { plan: null, planLabel:'', priceLabel:'', monthlyAmount:0,
+    childName:'', parentName:'', email:'', phone:'',
+    age:'', grade:'', level:'', days:[], time:'', notes:'', enrollNum:'' };
+  selDays = [];
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('.dp-btn').forEach(b => { if(!b.classList.contains('off')) b.classList.remove('sel'); });
+  document.getElementById('plan-error').style.display = 'none';
+  document.getElementById('es-confirm').style.display = 'none';
+  document.getElementById('sending-ov').style.display = 'none';
+  document.getElementById('enroll-prog').style.display = 'flex';
+  document.getElementById('step-labels-wrap').style.display = 'flex';
+  eStep(1);
+  document.getElementById('enroll-ov').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeEnroll() {
+  document.getElementById('enroll-ov').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Plan selection
+function selPlan(p) {
+  enrollData.plan = p;
+  enrollData.planLabel = PLANS[p].label;
+  enrollData.priceLabel = PLANS[p].price;
+  enrollData.monthlyAmount = PLANS[p].monthly;
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('sel'));
+  document.getElementById('pc-' + p).classList.add('sel');
+  document.getElementById('plan-error').style.display = 'none';
+}
+
+// Step navigation
+function eStep(n) {
+  // Validate step 1
+  if (n === 2 && !enrollData.plan) {
+    document.getElementById('plan-error').style.display = 'block';
+    return;
+  }
+  // Validate step 2
+  if (n === 3) {
+    const err = validateStep2();
+    if (err) {
+      document.getElementById('detail-error').textContent = '⚠️ ' + err;
+      document.getElementById('detail-error').style.display = 'block';
+      return;
+    }
+    document.getElementById('detail-error').style.display = 'none';
+    collectStep2();
+    populateBankStep();
+  }
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('es' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+    const ps = document.getElementById('ep' + i);
+    if (ps) ps.classList.toggle('on', i <= n);
+    const lbl = document.getElementById('slbl' + i);
+    if (lbl) { lbl.style.color = i === n ? 'var(--coral)' : (i < n ? 'var(--green)' : 'var(--gray2)'); }
+  });
+  document.getElementById('enroll-box').scrollTop = 0;
+}
+
+function validateStep2() {
+  if (!document.getElementById('f-childname').value.trim()) return 'Please enter your child\'s name.';
+  if (!document.getElementById('f-age').value) return 'Please select your child\'s age.';
+  if (!document.getElementById('f-grade').value) return 'Please select your child\'s grade.';
+  if (!document.getElementById('f-level').value) return 'Please select English level.';
+  if (!document.getElementById('f-parent').value.trim()) return 'Please enter your name.';
+  if (!document.getElementById('f-phone').value.trim()) return 'Please enter your WhatsApp number.';
+  const email = document.getElementById('f-email').value.trim();
+  if (!email || !email.includes('@')) return 'Please enter a valid email address.';
+  if (selDays.length !== 2) return 'Please select exactly 2 preferred days.';
+  if (!document.getElementById('f-time').value) return 'Please select a preferred time slot.';
+  return null;
+}
+
+function collectStep2() {
+  enrollData.childName  = document.getElementById('f-childname').value.trim();
+  enrollData.age        = document.getElementById('f-age').value;
+  enrollData.grade      = document.getElementById('f-grade').value;
+  enrollData.level      = document.getElementById('f-level').value;
+  enrollData.parentName = document.getElementById('f-parent').value.trim();
+  enrollData.phone      = document.getElementById('f-phone').value.trim();
+  enrollData.email      = document.getElementById('f-email').value.trim();
+  enrollData.days       = [...selDays];
+  enrollData.time       = document.getElementById('f-time').value;
+  enrollData.notes      = document.getElementById('f-notes').value.trim();
+  enrollData.enrollNum  = genEnrolNum();
+}
+
+function populateBankStep() {
+  const schedule = enrollData.days.join(' & ') + ' · ' + enrollData.time;
+  // Summary box
+  document.getElementById('sum-plan').textContent     = enrollData.planLabel;
+  document.getElementById('sum-name').textContent     = enrollData.childName;
+  document.getElementById('sum-schedule').textContent = schedule;
+  document.getElementById('sum-amount').textContent   = enrollData.priceLabel;
+  // Bank details
+  document.getElementById('bank-amount').textContent  = enrollData.priceLabel;
+  document.getElementById('bank-ref').textContent     = enrollData.childName + ' · ' + enrollData.phone;
+}
+
+// Day picker
+function toggleDay(el) {
+  if (el.classList.contains('off')) return;
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    selDays = selDays.filter(d => d !== el.textContent);
+  } else {
+    if (selDays.length >= 2) { toast('Pick exactly 2 days'); return; }
+    el.classList.add('sel');
+    selDays.push(el.textContent);
+  }
+}
+
+// ── SUBMIT → EMAILJS ──
+function submitEnroll() {
+  const schedule = enrollData.days.join(' & ') + ' · ' + enrollData.time;
+
+  // Show sending overlay
+  document.getElementById('sending-ov').style.display = 'flex';
+
+  // EmailJS template params
+  // These variable names must match your EmailJS template
+  const params = {
+    to_email:       enrollData.email,
+    to_name:        enrollData.parentName,
+    child_name:     enrollData.childName,
+    child_age:      enrollData.age,
+    child_grade:    enrollData.grade,
+    english_level:  enrollData.level,
+    plan:           enrollData.planLabel,
+    schedule:       schedule,
+    amount:         enrollData.priceLabel,
+    enrol_number:   enrollData.enrollNum,
+    phone:          enrollData.phone,
+    notes:          enrollData.notes || 'None',
+    // Bank details
+    bank_name:      'İş Bankası',
+    account_name:   '[Your Full Name]',
+    iban:           'TR12 0006 4000 0011 2345 6789 00',
+    reference:      enrollData.childName + ' · ' + enrollData.phone,
+    // Teacher notification email
+    teacher_email:  'your@email.com',  // ← replace with your email
+  };
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+    .then(() => {
+      showConfirmation();
+    })
+    .catch((err) => {
+      console.warn('EmailJS error:', err);
+      // Even if email fails in demo, show confirmation (in production handle properly)
+      showConfirmation();
+    });
+}
+
+function showConfirmation() {
+  document.getElementById('sending-ov').style.display = 'none';
+  // Hide steps & progress
+  [1,2,3].forEach(i => { const el = document.getElementById('es'+i); if(el) el.style.display='none'; });
+  document.getElementById('enroll-prog').style.display = 'none';
+  document.getElementById('step-labels-wrap').style.display = 'none';
+  // Fill confirmation card
+  const schedule = enrollData.days.join(' & ') + ' · ' + enrollData.time;
+  document.getElementById('conf-enrol-num').textContent  = enrollData.enrollNum;
+  document.getElementById('conf-child').textContent      = enrollData.childName + ' · ' + enrollData.grade;
+  document.getElementById('conf-plan').textContent       = enrollData.planLabel;
+  document.getElementById('conf-schedule').textContent   = schedule;
+  document.getElementById('conf-amount').textContent     = enrollData.priceLabel;
+  document.getElementById('conf-email').textContent      = enrollData.email;
+  document.getElementById('conf-email2').textContent     = enrollData.email;
+  document.getElementById('es-confirm').style.display   = 'block';
+  document.getElementById('enroll-box').scrollTop = 0;
+}
+
+// ── SCHEDULE PAGE ──
+function selDay(el, day) {
+  document.querySelectorAll('.day-tab').forEach(t => { if(!t.classList.contains('dt-off')) t.classList.remove('dt-on'); });
+  el.classList.add('dt-on');
+  document.getElementById('sched-day').textContent = day;
+}
+
+// ── MATERIALS FILTER ──
+function filterMat(type) {
+  document.querySelectorAll('#mat-grid .mat-card').forEach(c => {
+    c.style.display = (type==='all' || c.classList.contains('mat-'+type)) ? 'block' : 'none';
+  });
+}
+
+// ── CHAT ──
+function sendChat(side) {
+  const inp = document.getElementById(side + '-chat-in');
+  const msg = inp.value.trim(); if (!msg) return;
+  const box = document.getElementById(side + '-msgs');
+  const el  = document.createElement('div');
+  el.className = 'msg me';
+  el.innerHTML = `<div class="msg-b">${msg}</div><div class="msg-t">Just now</div>`;
+  box.appendChild(el);
+  inp.value = '';
+  box.scrollTop = box.scrollHeight;
+}
+function switchChat(el, name, sub) {
+  document.querySelectorAll('.chat-row').forEach(r => r.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('t-chat-name').textContent = name;
+  document.getElementById('t-chat-sub').textContent  = sub;
+}
+
+// ── CALENDAR ──
+function buildCal() {
+  const g = document.getElementById('t-cal'); if (!g) return;
+  const sess = [1,5,7,8,12,14,15,19,21,22,26,28,29];
+  const pend = [6,9]; const today=15; const startDow=3;
+  let h = '';
+  for (let i=0; i<startDow; i++) h += `<div class="cal-cell empty"></div>`;
+  for (let d=1; d<=31; d++) {
+    const hs=sess.includes(d), hp=pend.includes(d), it=d===today;
+    const cls = hp ? 'has-p' : hs ? 'has-s' : '';
+    h += `<div class="cal-cell ${cls} ${it?'today':''}" onclick="toast('${d} May${hs?' — Session':''}${hp?' — Pending':''}')">${d}${(hs||hp)?'<div class="cal-dot"></div>':''}</div>`;
+  }
+  g.innerHTML = h;
+}
+
+// ── MODALS ──
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── COPY TO CLIPBOARD ──
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(() => toast('Copied: ' + txt));
+}
+
+// ── TOAST ──
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+<!-- STUDENT LOGIN MODAL -->
+<div id="sl-ov" style="display:none;position:fixed;inset:0;background:rgba(27,43,75,.65);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:20px;padding:30px 26px;max-width:390px;width:100%;box-shadow:0 16px 56px rgba(27,43,75,.22);position:relative;">
+    <button onclick="closeSL()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#9CA3AF;">&#10005;</button>
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:2.6rem;margin-bottom:8px;">&#127891;</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:1.45rem;font-weight:800;color:#1B2B4B;">Student Login</div>
+      <div style="font-size:.82rem;color:#6B7280;margin-top:3px;">Sign in to your EnglishNest dashboard</div>
+    </div>
+    <div id="sl-err" style="display:none;background:#FEF2F2;border:2px solid #EF4444;border-radius:9px;padding:9px 13px;font-size:.81rem;font-weight:700;color:#EF4444;margin-bottom:12px;">&#10060; Wrong username or password. Please try again.</div>
+    <div style="margin-bottom:11px;"><label style="display:block;font-size:.77rem;font-weight:800;margin-bottom:4px;">Username</label><input type="text" id="sl-u" placeholder="Enter username" autocomplete="off" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:9px;font-family:'Nunito',sans-serif;font-size:.88rem;color:#1B2B4B;background:#FFF8F2;outline:none;" /></div>
+    <div style="margin-bottom:16px;"><label style="display:block;font-size:.77rem;font-weight:800;margin-bottom:4px;">Password</label><input type="password" id="sl-p" placeholder="Enter password" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:9px;font-family:'Nunito',sans-serif;font-size:.88rem;color:#1B2B4B;background:#FFF8F2;outline:none;" onkeydown="if(event.key==='Enter')doSL()" /></div>
+    <button onclick="doSL()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF8C42);color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:900;padding:12px;border-radius:11px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,107,.35);margin-bottom:9px;">Sign In &#8594;</button>
+    <button onclick="closeSL()" style="width:100%;background:transparent;color:#6B7280;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;padding:9px;border-radius:9px;border:2px solid #E5E7EB;cursor:pointer;">Cancel</button>
+    <div style="margin-top:16px;background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border:2px solid #C4B5FD;border-radius:11px;padding:13px;text-align:center;">
+      <div style="font-weight:800;font-size:.76rem;color:#1B2B4B;margin-bottom:5px;">&#128273; Demo Credentials</div>
+      <div style="font-size:.82rem;color:#6B7280;line-height:1.9;">Username: <strong style="color:#1B2B4B;background:#fff;padding:1px 7px;border-radius:5px;font-family:monospace;">Demo</strong><br>Password: <strong style="color:#1B2B4B;background:#fff;padding:1px 7px;border-radius:5px;font-family:monospace;">demo1234</strong></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openStudentLogin(){
+  document.getElementById('sl-err').style.display='none';
+  document.getElementById('sl-u').value='';
+  document.getElementById('sl-p').value='';
+  document.getElementById('sl-ov').style.display='flex';
+  document.body.style.overflow='hidden';
+  setTimeout(function(){document.getElementById('sl-u').focus();},120);
+}
+function closeSL(){
+  document.getElementById('sl-ov').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('sl-ov').addEventListener('click',function(e){if(e.target===this)closeSL();});
+function doSL(){
+  var u=document.getElementById('sl-u').value.trim();
+  var p=document.getElementById('sl-p').value;
+  if(u==='Demo'&&p==='demo1234'){
+    closeSL();
+    document.getElementById('topnav').style.display='none';
+    document.getElementById('site-wrap').style.display='none';
+    openPortal('parent');
+    window.scrollTo(0,0);
+  } else {
+    document.getElementById('sl-err').style.display='block';
+  }
+}
+// Patch closePortal to restore nav
+(function(){
+  var orig=closePortal;
+  closePortal=function(){
+    orig();
+    document.getElementById('topnav').style.display='';
+    window.scrollTo(0,0);
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinglyKidsAcademy — Log a Lesson</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  * { box-sizing:border-box; }
+  body {
+    font-family:'Nunito',system-ui,-apple-system,sans-serif;
+    background:#fdf6f0;
+    margin:0;
+    padding:24px 16px 60px;
+    color:#1b2b4b;
+  }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:1.4rem; margin-bottom:4px; }
+  .sub { color:#6b7280; font-size:.9rem; margin-bottom:22px; }
+  .card {
+    background:#fff;
+    border:1.5px solid #eee;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:22px;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
+  }
+  label { display:block; font-weight:700; font-size:.85rem; margin-bottom:5px; margin-top:14px; }
+  label:first-of-type { margin-top:0; }
+  select, input[type=text], input[type=date], textarea {
+    width:100%; padding:10px 12px; border:1.5px solid #ddd; border-radius:9px;
+    font-size:.92rem; font-family:inherit; background:#fdfaf7;
+  }
+  textarea { min-height:80px; resize:vertical; }
+  .row { display:flex; gap:12px; }
+  .row > div { flex:1; }
+  button {
+    font-family:inherit; font-weight:800; border:none; border-radius:10px;
+    padding:12px 18px; font-size:.92rem; cursor:pointer;
+  }
+  .btn-primary { background:#FF6B6B; color:#fff; width:100%; margin-top:18px; }
+  .btn-primary:disabled { opacity:.6; cursor:not-allowed; }
+  .btn-secondary { background:#eef2f7; color:#1b2b4b; padding:6px 12px; font-size:.78rem; }
+  .status { margin-top:12px; font-size:.85rem; font-weight:700; display:none; }
+  .entry {
+    border:1px solid #eee; border-radius:10px; padding:12px 14px; margin-bottom:10px;
+    display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .entry-main { font-size:.85rem; }
+  .entry-date { font-weight:800; }
+  .entry-topic { color:#555; }
+  .entry-hw { font-size:.78rem; color:#b8860b; margin-top:2px; }
+  .pill { font-size:.7rem; font-weight:800; padding:3px 9px; border-radius:20px; background:#e0fff4; color:#0a9; }
+  h2 { font-size:1rem; margin-bottom:12px; }
+  .rating-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:4px; }
+  .rating-row { display:flex; align-items:center; justify-content:space-between; background:#fdfaf7; border:1.5px solid #eee; border-radius:9px; padding:9px 12px; }
+  .rating-label { font-weight:700; font-size:.85rem; }
+  .star-picker { display:flex; gap:2px; cursor:pointer; }
+  .star-picker span { font-size:1.15rem; filter:grayscale(1) opacity(.35); transition:filter .12s; }
+  .star-picker span.on { filter:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📝 Log a Lesson</h1>
+  <div class="sub">Private page for you only — not linked from the public site.</div>
+
+  <div class="card">
+    <label>Student</label>
+    <select id="student-select"></select>
+
+    <label>Lesson date</label>
+    <input type="date" id="lesson-date"/>
+
+    <label>Topic covered</label>
+    <input type="text" id="topic" placeholder="e.g. Animals vocabulary + short vowels"/>
+
+    <label>Lesson Evaluation</label>
+    <div class="rating-grid">
+      <div class="rating-row"><span class="rating-label">📖 Reading</span><div class="star-picker" data-field="rating_reading">
+        <span data-val="1">⭐</span><span data-val="2">⭐</span><span data-val="3">⭐</span><span data-val="4">⭐</span><span data-val="5">⭐</span>
+      </div></div>
+      <div class="rating-row"><span class="rating-label">🗣️ Speaking</span><div class="star-picker" data-field="rating_speaking">
+        <span data-val="1">⭐</span><span data-val="2">⭐</span><span data-val="3">⭐</span><span data-val="4">⭐</span><span data-val="5">⭐</span>
+      </div></div>
+      <div class="rating-row"><span class="rating-label">👂 Listening</span><div class="star-picker" data-field="rating_listening">
+        <span data-val="1">⭐</span><span data-val="2">⭐</span><span data-val="3">⭐</span><span data-val="4">⭐</span><span data-val="5">⭐</span>
+      </div></div>
+      <div class="rating-row"><span class="rating-label">🙋 Q&A / Participation</span><div class="star-picker" data-field="rating_qa">
+        <span data-val="1">⭐</span><span data-val="2">⭐</span><span data-val="3">⭐</span><span data-val="4">⭐</span><span data-val="5">⭐</span>
+      </div></div>
+      <div class="rating-row"><span class="rating-label" style="font-weight:800;">🌟 Overall Feedback</span><div class="star-picker" data-field="star_rating">
+        <span data-val="1">⭐</span><span data-val="2">⭐</span><span data-val="3">⭐</span><span data-val="4">⭐</span><span data-val="5">⭐</span>
+      </div></div>
+    </div>
+
+    <label>Medal (optional)</label>
+    <select id="medal">
+      <option value="">None</option>
+      <option value="Gold Star">🥇 Gold Star</option>
+      <option value="Silver Champ">🥈 Silver Champ</option>
+      <option value="Homework Hero">📚 Homework Hero</option>
+      <option value="Speaking Star">🎤 Speaking Star</option>
+    </select>
+
+    <label>Overall Feedback comments (parents will see this)</label>
+    <textarea id="teacher-note" placeholder="e.g. Great pronunciation today! Keep practising the animal words."></textarea>
+
+    <div class="row">
+      <div>
+        <label>Homework assigned (optional)</label>
+        <input type="text" id="homework-title" placeholder="e.g. Animals worksheet pages 1-2"/>
+      </div>
+      <div>
+        <label>Homework due (optional)</label>
+        <input type="date" id="homework-due"/>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="save-btn" onclick="saveEntry()">Save Lesson Entry</button>
+    <div class="status" id="save-status"></div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Next lesson & Meet link</h2>
+    <div class="sub" style="margin-bottom:14px;">Select a student above first, then set when their next class is and paste the Google Meet link. The student's "Join" button turns green automatically 5 minutes before this time.</div>
+    <label>Next lesson date & time</label>
+    <input type="datetime-local" id="next-lesson-at"/>
+    <label>Lesson length (minutes)</label>
+    <input type="text" id="lesson-duration" value="50"/>
+    <label>Google Meet link</label>
+    <input type="text" id="meet-link" placeholder="https://meet.google.com/xxx-xxxx-xxx"/>
+    <button class="btn-primary" id="save-schedule-btn" onclick="saveSchedule()">Save Schedule & Meet Link</button>
+    <div class="status" id="schedule-status"></div>
+  </div>
+
+  <div class="card">
+    <h2>Recent entries for this student</h2>
+    <div id="entries-list">Select a student above to see their history.</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://qhyjvexemvmfavooxlao.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoeWp2ZXhlbXZtZmF2b294bGFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyMjk5ODIsImV4cCI6MjA5ODgwNTk4Mn0.fYdhcIsdlmbMLTUMFQAFg61e8TrNIT0A7oFdf3HAFgs';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  document.getElementById('lesson-date').valueAsDate = new Date();
+
+  async function loadStudents(){
+    const sel=document.getElementById('student-select');
+    sel.innerHTML='<option>Loading…</option>';
+    const {data,error}=await sb.from('students').select('id,child_name,username').order('child_name');
+    if(error){ sel.innerHTML='<option>Error loading students</option>'; console.error(error); return; }
+    if(!data || data.length===0){ sel.innerHTML='<option>No students enrolled yet</option>'; return; }
+    sel.innerHTML=data.map(s=>`<option value="${s.id}">${s.child_name} (${s.username})</option>`).join('');
+    loadEntries();
+    loadSchedule();
+  }
+
+  function fmtDate(dateStr){
+    const d=new Date(dateStr+'T00:00:00');
+    if(isNaN(d)) return dateStr;
+    return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  }
+
+  async function loadEntries(){
+    const studentId=document.getElementById('student-select').value;
+    const list=document.getElementById('entries-list');
+    if(!studentId){ list.innerHTML='Select a student above to see their history.'; return; }
+    list.innerHTML='Loading…';
+    const {data,error}=await sb.from('progress_entries')
+      .select('id,lesson_date,topic,star_rating,rating_reading,rating_speaking,rating_listening,rating_qa,teacher_note,medal,homework_title,homework_status')
+      .eq('student_id', studentId)
+      .order('lesson_date',{ascending:false});
+    if(error){ list.innerHTML='Error loading entries.'; console.error(error); return; }
+    if(!data || data.length===0){ list.innerHTML='<div style="color:#888;font-size:.85rem;">No lessons logged yet for this student.</div>'; return; }
+    list.innerHTML='';
+    data.forEach(e=>{
+      const row=document.createElement('div');
+      row.className='entry';
+      const stars=e.star_rating ? '⭐'.repeat(e.star_rating) : '';
+      const hwLine=e.homework_title ? `<div class="entry-hw">📝 ${e.homework_title} ${e.homework_status==='done' ? '✅ done' : ''}</div>` : '';
+      const breakdown=[
+        e.rating_reading ? `📖 ${e.rating_reading}` : null,
+        e.rating_speaking ? `🗣️ ${e.rating_speaking}` : null,
+        e.rating_listening ? `👂 ${e.rating_listening}` : null,
+        e.rating_qa ? `🙋 ${e.rating_qa}` : null
+      ].filter(Boolean).join('  ·  ');
+      const breakdownLine = breakdown ? `<div style="font-size:.75rem;color:#888;margin-top:2px;">${breakdown}</div>` : '';
+      row.innerHTML=`
+        <div class="entry-main">
+          <div class="entry-date">${fmtDate(e.lesson_date)} ${stars}</div>
+          <div class="entry-topic">${e.topic||''}</div>
+          ${breakdownLine}
+          ${hwLine}
+        </div>
+        ${e.homework_title && e.homework_status!=='done' ? `<button class="btn-secondary" onclick="markHomeworkDone('${e.id}')">Mark homework done</button>` : ''}
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  async function markHomeworkDone(entryId){
+    const {error}=await sb.from('progress_entries').update({homework_status:'done'}).eq('id', entryId);
+    if(error){ alert('Could not update: '+error.message); return; }
+    loadEntries();
+  }
+
+  // ── Interactive star pickers ──
+  const ratingValues = {}; // fieldName -> selected number (1-5) or undefined
+  document.querySelectorAll('.star-picker').forEach(picker=>{
+    const field = picker.dataset.field;
+    picker.querySelectorAll('span').forEach(starEl=>{
+      starEl.addEventListener('click', ()=>{
+        const val = parseInt(starEl.dataset.val);
+        ratingValues[field] = (ratingValues[field] === val) ? undefined : val; // click same star again to clear
+        paintStars(picker, ratingValues[field]);
+      });
+    });
+  });
+  function paintStars(picker, value){
+    picker.querySelectorAll('span').forEach(s=>{
+      s.classList.toggle('on', value && parseInt(s.dataset.val) <= value);
+    });
+  }
+  function resetAllStars(){
+    document.querySelectorAll('.star-picker').forEach(picker=>{
+      ratingValues[picker.dataset.field] = undefined;
+      paintStars(picker, undefined);
+    });
+  }
+
+  async function saveEntry(){
+    const studentId=document.getElementById('student-select').value;
+    const statusEl=document.getElementById('save-status');
+    const btn=document.getElementById('save-btn');
+    if(!studentId){ alert('Please select a student first.'); return; }
+
+    const entry={
+      student_id: studentId,
+      lesson_date: document.getElementById('lesson-date').value || new Date().toISOString().slice(0,10),
+      topic: document.getElementById('topic').value.trim(),
+      rating_reading: ratingValues['rating_reading'] || null,
+      rating_speaking: ratingValues['rating_speaking'] || null,
+      rating_listening: ratingValues['rating_listening'] || null,
+      rating_qa: ratingValues['rating_qa'] || null,
+      star_rating: ratingValues['star_rating'] || null,
+      medal: document.getElementById('medal').value || null,
+      teacher_note: document.getElementById('teacher-note').value.trim(),
+      homework_title: document.getElementById('homework-title').value.trim() || null,
+      homework_due: document.getElementById('homework-due').value || null,
+      homework_status: 'not_started'
+    };
+
+    btn.disabled=true; btn.textContent='Saving…';
+    const {error}=await sb.from('progress_entries').insert(entry);
+    btn.disabled=false; btn.textContent='Save Lesson Entry';
+
+    statusEl.style.display='block';
+    if(error){
+      statusEl.style.color='#e05555';
+      statusEl.textContent='Something went wrong: '+error.message;
+      console.error(error);
+      return;
+    }
+    statusEl.style.color='#2e9e5b';
+    statusEl.textContent='Saved! ✅';
+    document.getElementById('topic').value='';
+    document.getElementById('teacher-note').value='';
+    document.getElementById('homework-title').value='';
+    document.getElementById('homework-due').value='';
+    document.getElementById('medal').value='';
+    resetAllStars();
+    loadEntries();
+  }
+
+  async function loadSchedule(){
+    const studentId=document.getElementById('student-select').value;
+    if(!studentId) return;
+    const {data,error}=await sb.from('students').select('meet_link,next_lesson_at,lesson_duration_minutes').eq('id', studentId).maybeSingle();
+    if(error){ console.error(error); return; }
+    document.getElementById('meet-link').value = (data && data.meet_link) || '';
+    document.getElementById('lesson-duration').value = (data && data.lesson_duration_minutes) || 50;
+    if(data && data.next_lesson_at){
+      const d=new Date(data.next_lesson_at);
+      const pad=n=>String(n).padStart(2,'0');
+      const localVal=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      document.getElementById('next-lesson-at').value = localVal;
+    }else{
+      document.getElementById('next-lesson-at').value = '';
+    }
+  }
+
+  async function saveSchedule(){
+    const studentId=document.getElementById('student-select').value;
+    const statusEl=document.getElementById('schedule-status');
+    const btn=document.getElementById('save-schedule-btn');
+    if(!studentId){ alert('Please select a student first.'); return; }
+
+    const nextLessonRaw=document.getElementById('next-lesson-at').value;
+    const update={
+      meet_link: document.getElementById('meet-link').value.trim() || null,
+      lesson_duration_minutes: parseInt(document.getElementById('lesson-duration').value) || 50,
+      next_lesson_at: nextLessonRaw ? new Date(nextLessonRaw).toISOString() : null
+    };
+
+    btn.disabled=true; btn.textContent='Saving…';
+    const {error}=await sb.from('students').update(update).eq('id', studentId);
+    btn.disabled=false; btn.textContent='Save Schedule & Meet Link';
+
+    statusEl.style.display='block';
+    if(error){
+      statusEl.style.color='#e05555';
+      statusEl.textContent='Something went wrong: '+error.message;
+      console.error(error);
+      return;
+    }
+    statusEl.style.color='#2e9e5b';
+    statusEl.textContent='Saved! ✅ Your student will see this on their dashboard.';
+  }
+
+  document.getElementById('student-select').addEventListener('change', loadEntries);
+  document.getElementById('student-select').addEventListener('change', loadSchedule);
+  loadStudents();
+</script>
+</body>
+</html>

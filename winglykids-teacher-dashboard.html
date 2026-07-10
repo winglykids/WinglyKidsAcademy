@@ -313,6 +313,14 @@
                 <option value="">Select a student...</option>
             </select>
 
+            <label class="text-sm font-bold text-slate-600 block mb-1">Upload File (optional)</label>
+            <div class="border-2 border-dashed border-slate-200 rounded-xl p-4 mb-4 text-center cursor-pointer" onclick="document.getElementById('assign-hw-file').click()" id="upload-area">
+                <div class="text-slate-400 font-bold text-sm">📎 Click to upload or drag file</div>
+                <div class="text-xs text-slate-300">PDF, JPG, PNG, MP4 accepted</div>
+            </div>
+            <input type="file" id="assign-hw-file" accept=".pdf,.jpg,.jpeg,.png,.mp4" style="display:none"/>
+            <div id="assign-hw-file-name" class="text-sm text-emerald-600 font-bold mb-4" style="display:none;"></div>
+
             <div id="assign-hw-status" class="text-sm font-bold mb-3" style="display:none;"></div>
             <div class="flex gap-3">
                 <button onclick="closeAssignModal()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-2xl">Cancel</button>
@@ -766,7 +774,6 @@ function teacherQuickEmoji(emoji){
             document.getElementById('assign-hw-due').value = '';
             document.getElementById('assign-hw-file').value = '';
             document.getElementById('assign-hw-students').value = '';
-            document.getElementById('assign-hw-file-name').style.display = 'none';
         }
         function closeAssignModal() {
             document.getElementById('assign-hw-modal').style.display = 'none';
@@ -785,15 +792,31 @@ function teacherQuickEmoji(emoji){
             if (!studentId) { status.textContent = 'Please select at least one student'; status.style.color = '#dc2626'; status.style.display = 'block'; return; }
             
             btn.disabled = true;
-            btn.textContent = 'Saving…';
+            btn.textContent = 'Uploading…';
             let fileUrl = null;
             
-            // Save to database WITHOUT file upload (file upload optional)
+            // Upload file if selected
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const fileName = `homework_${Date.now()}_${file.name}`;
+                const {data, error} = await sb.storage.from('uploads').upload(fileName, file);
+                if (error) {
+                    status.textContent = 'Error uploading file: ' + error.message;
+                    status.style.color = '#dc2626';
+                    status.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Save & Assign';
+                    return;
+                }
+                fileUrl = fileName;
+            }
+            
+            // Create homework assignment record
             const assignment = {
                 student_id: studentId,
                 title: title,
                 description: desc || null,
-                file_url: null,
+                file_url: fileUrl,
                 due_date: dueDate,
                 status: 'active'
             };
